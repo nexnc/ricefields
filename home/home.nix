@@ -9,6 +9,9 @@
 
   imports = [
   
+  # Desktop
+   ./modules/desktop
+
   # Programs
 
   ./modules/programs

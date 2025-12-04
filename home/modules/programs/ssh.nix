@@ -3,9 +3,16 @@
 {
   programs.ssh = {
     enable = true;
-    
-    # This automatically adds your key to the agent when you first use it
-    addKeysToAgent = "yes"; 
+    addKeysToAgent = "yes";
+
+    # This tells SSH: "When I visit gitlab.com, use the key named 'gitlab'"
+    matchBlocks = {
+      "gitlab.com" = {
+        hostname = "gitlab.com";
+        user = "git";
+        identityFile = "~/.ssh/gitlab";
+      };
+    };
   };
 
   services.ssh-agent = {
