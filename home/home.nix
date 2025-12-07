@@ -1,45 +1,62 @@
+/*
+  ╔═══════════════════════════════════════════════════════╗
+  ║                                                       ║
+  ║        ██╗  ██╗ ██████╗ ███╗   ███╗███████╗           ║
+  ║        ██║  ██║██╔═══██╗████╗ ████║██╔════╝           ║
+  ║        ███████║██║   ██║██╔████╔██║█████╗             ║
+  ║        ██╔══██║██║   ██║██║╚██╔╝██║██╔══╝             ║
+  ║        ██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗           ║
+  ║        ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝           ║
+  ║                                                       ║
+  ╚═══════════════════════════════════════════════════════╝
+*/
+
 { config, pkgs, ... }:
 
-
-
 {
-  home.username = "nexnc";
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  CORE CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  home.username      = "nexnc";
   home.homeDirectory = "/home/nexnc";
-  home.stateVersion = "25.05";
+  home.stateVersion  = "25.11"; # Updated to match system version
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  MODULE IMPORTS
+  # ═══════════════════════════════════════════════════════════════════════════
   imports = [
-  
-  # Desktop
-   ./modules/desktop
+    # Desktop Environment Settings (Hyprland, Waybar, etc.)
+    ./modules/desktop
 
-  # Programs
-
-  ./modules/programs
+    # User Programs (Git, Neovim, etc.)
+    ./modules/programs
  
-  # Services
-  ./modules/services
-
+    # User Services (Syncthing, MPD, etc.)
+    ./modules/services
   ];
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  USER PACKAGES
+  # ═══════════════════════════════════════════════════════════════════════════
   home.packages = with pkgs; [
-    # Browsers & Communication
+    # ─── Browsers & Communication ──────────────────────────────────────────────
     librewolf
     thunderbird
     signal-desktop
 
-    # Media & Entertainment
+    # ─── Media & Entertainment ─────────────────────────────────────────────────
     mpv
     freetube
 
-    # Productivity & Creation
+    # ─── Productivity & Creation ───────────────────────────────────────────────
     obs-studio
     gimp
 
-    # Gaming
+    # ─── Gaming ────────────────────────────────────────────────────────────────
     prismlauncher
     bottles
 
-    # Developement
+    # ─── Development ───────────────────────────────────────────────────────────
     python3
     cargo
     rustc
@@ -47,7 +64,7 @@
     gcc
     uv
 
-    # Desktop Utilities
+    # ─── Desktop Utilities ─────────────────────────────────────────────────────
     fastfetch
     yt-dlp
     aria2
@@ -57,49 +74,57 @@
     qbittorrent
     valent
 
-    # Terminal
+    # ─── Terminal Tools ────────────────────────────────────────────────────────
     tmux
     wl-clipboard
     cliphist
-    eza
-    ripgrep
-    fd
-    bat
-    dust
-    duf
-    gdu
-    tldr
-    delta
-    tokei
-    btop
-    bandwhich
-    just
-    hyperfine
+    eza             # Better ls
+    ripgrep         # Better grep
+    fd              # Better find
+    bat             # Better cat
+    dust            # Disk usage
+    duf             # Disk usage (TUI)
+    gdu             # Disk usage analyzer
+    tldr            # Simplified man pages
+    delta           # Better git diff
+    tokei           # Count lines of code
+    btop            # Process manager
+    bandwhich       # Network monitor
+    just            # Command runner
+    hyperfine       # Benchmarking
   ];
 
-  home.file = { };
-
-  home.sessionVariables = {
-  EDITOR = "nvim";
-  VISUAL = "nvim";
-  TERMINAL = "foot";
-  BROWSER = "librewolf";
-
-  XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
-  XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-  XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-
-
-  # Better CLI tools
-  #PAGER = "less";
-  #MANPAGER = "less";
-  #LESSHISTFILE = "-"; # optional, disables .lesshst
-
-  # Wayland
-  MOZ_ENABLE_WAYLAND = "1";
-  XDG_CURRENT_DESKTOP = "Hyprland";
-  XDG_SESSION_TYPE = "wayland";
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  FILE MANAGEMENT
+  # ═══════════════════════════════════════════════════════════════════════════
+  home.file = { 
+    # ".config/hypr/hyprland.conf".source = ./dotfiles/hyprland.conf;
   };
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  ENVIRONMENT VARIABLES
+  # ═══════════════════════════════════════════════════════════════════════════
+  home.sessionVariables = {
+    # Core defaults
+    EDITOR   = "nvim";
+    VISUAL   = "nvim";
+    TERMINAL = "foot";
+    BROWSER  = "librewolf";
+
+    # XDG Directories
+    XDG_CACHE_HOME  = "${config.home.homeDirectory}/.cache";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+    XDG_DATA_HOME   = "${config.home.homeDirectory}/.local/share";
+
+    # Wayland Compatibility
+    MOZ_ENABLE_WAYLAND  = "1";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE    = "wayland";
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  #  HOME MANAGER SETUP
+  # ═══════════════════════════════════════════════════════════════════════════
   programs.home-manager.enable = true;
 }
+
