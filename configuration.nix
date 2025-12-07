@@ -1,278 +1,393 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+/*
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║                                                                           ║
+  ║        ███╗   ██╗███████╗██╗  ██╗███╗   ██╗ ██████╗                       ║
+  ║        ████╗  ██║██╔════╝╚██╗██╔╝████╗  ██║██╔════╝                       ║
+  ║        ██╔██╗ ██║█████╗   ╚███╔╝ ██╔██╗ ██║██║                            ║
+  ║        ██║╚██╗██║██╔══╝   ██╔██╗ ██║╚██╗██║██║                            ║
+  ║        ██║ ╚████║███████╗██╔╝ ██╗██║ ╚████║╚██████╗                       ║
+  ║        ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝                       ║
+  ║                                                                           ║
+  ║   NixOS 25.11 (Xantusia) • Hyprland • Zen Kernel                          ║
+  ║   User: nexnc • Host: nixos                                               ║
+  ║                                                                           ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+*/
 
 { config, pkgs, inputs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-
-	./hardware-configuration.nix
-
-    ];
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-  # networking.useNetworkd = true;
-  # networking.useDHCP = true;
-
-  # Set your time zone.
-  time.timeZone = "Asia/Kolkata";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_IN";
-    LC_IDENTIFICATION = "en_IN";
-    LC_MEASUREMENT = "en_IN";
-    LC_MONETARY = "en_IN";
-    LC_NAME = "en_IN";
-    LC_NUMERIC = "en_IN";
-    LC_PAPER = "en_IN";
-    LC_TELEPHONE = "en_IN";
-    LC_TIME = "en_IN";
-  };
-
-
-  # Enable Flakes
-  
-  nix.settings = {
-
-     experimental-features = [ "nix-command" "flakes" ]; # Enable Flakes
-     download-buffer-size = 268435456;  # 256 MB buffer size
-     max-jobs = "auto";  # Parallel Builds
-     cores = 0;  # use all available cores
-
-  };
-
-  # Enable Greetd with tuigreet
-
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd Hyprland";
-        user = "greeter";
-      };
-    };
-  }; 
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "de";
-    variant = "us";
-  };
-
-  # Configure console keymap
-  console.keyMap = "us";
-
-  # Fonts
-
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    font-awesome
+  imports = [
+    ./hardware-configuration.nix
   ];
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-
-  # Sound Configuration
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BOOTLOADER & KERNEL
+  # ═══════════════════════════════════════════════════════════════════════════
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;  # Keep only last 10 generations in boot menu
+        consoleMode = "max";       # Use maximum resolution
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 3;  # Boot menu timeout in seconds
+    };
+    kernelPackages = pkgs.linuxPackages_zen;  # Performance-optimized kernel
+    
+    # Silent boot (optional - uncomment if you want a cleaner boot)
+    # kernelParams = [ "quiet" "splash" ];
+    # consoleLogLevel = 3;
   };
 
- 
-  # Bluetooth Configuration
-  services.blueman.enable = true;
-  hardware.enableAllFirmware = true;
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
+  # ═══════════════════════════════════════════════════════════════════════════
+  # NIX CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  nix = {
     settings = {
-      General = {
-        Experimental = true; # Show battery charge for BT devices
-        # This line is crucial for the A2DP Sink profile to be enabled
+      # Flakes & nix-command
+      experimental-features = [ "nix-command" "flakes" ];
+      
+      # Performance optimizations
+      download-buffer-size = 268435456;  # 256 MB for 300mbps connection
+      max-jobs = "auto";                  # Parallel builds
+      cores = 0;                          # Use all CPU cores
+      
+      # Build optimization
+      auto-optimise-store = true;         # Automatically deduplicate store
+      
+      # Substituters (binary caches)
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
+    
+    # Automatic garbage collection
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    
+    # Optimize store weekly
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
+  
+  nixpkgs.config.allowUnfree = true;
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # NETWORKING & LOCALIZATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+    
+    # Firewall configuration
+    firewall = {
+      enable = true;
+      allowedTCPPortRanges = [ 
+        { from = 1714; to = 1764; }  # KDE Connect / Valent
+      ];
+      allowedUDPPortRanges = [ 
+        { from = 1714; to = 1764; }  # KDE Connect / Valent
+      ];
+    };
+  };
+  
+  # Time & Locale
+  time.timeZone = "Asia/Kolkata";
+  
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS        = "en_IN";
+      LC_IDENTIFICATION = "en_IN";
+      LC_MEASUREMENT    = "en_IN";
+      LC_MONETARY       = "en_IN";
+      LC_NAME           = "en_IN";
+      LC_NUMERIC        = "en_IN";
+      LC_PAPER          = "en_IN";
+      LC_TELEPHONE      = "en_IN";
+      LC_TIME           = "en_IN";
+    };
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # HARDWARE CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  hardware = {
+    graphics.enable = true;
+    i2c.enable = true;
+    
+    # Bluetooth
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      settings.General = {
+        Experimental = true;
         Enable = "Source,Sink,Media,Socket";
       };
     };
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  # ═══════════════════════════════════════════════════════════════════════════
+  # AUDIO (PIPEWIRE)
+  # ═══════════════════════════════════════════════════════════════════════════
+  security.rtkit.enable = true;
+  
+  services.pipewire = {
+    enable = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
+    pulse.enable = true;
+    wireplumber.enable = true;
+    
+    # Low latency configuration (optional)
+    # extraConfig.pipewire."92-low-latency" = {
+    #   "context.properties" = {
+    #     "default.clock.rate" = 48000;
+    #     "default.clock.quantum" = 32;
+    #     "default.clock.min-quantum" = 32;
+    #     "default.clock.max-quantum" = 32;
+    #   };
+    # };
+  };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.nexnc = {
-    isNormalUser = true;
-    description = "NEXNC";
-    extraGroups = [ "networkmanager" "wheel" "i2c"];
-    shell = pkgs.fish;
-    packages = with pkgs; [
+  # ═══════════════════════════════════════════════════════════════════════════
+  # DESKTOP ENVIRONMENT (HYPRLAND)
+  # ═══════════════════════════════════════════════════════════════════════════
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
+  };
 
-	# List your user specific packages here
+  # Display Manager (greetd + tuigreet)
+  services.greetd = {
+    enable = true;
+    settings.default_session = {
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd Hyprland";
+      user = "greeter";
+    };
+  };
+
+  # XDG Portals for Wayland
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
     ];
   };
 
-  # Home Manager
-
-  home-manager = {
-    # also pass inputs to home-manager modules
-    extraSpecialArgs = {inherit  inputs;};
-    backupFileExtension = "backup";
-    users = {
-
-      "nexnc" = import ./home/home.nix;		     
-
-    };
+  # Input & Console
+  services.xserver.xkb = { 
+    layout = "us";
+    variant = ""; 
   };
+  console.keyMap = "us";
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    font-awesome
+    noto-fonts
+    noto-fonts-color-emoji
+  ];
 
-  # Hyprland
-
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true; # recommended for most users
-    xwayland.enable = true; # Xwayland can be disabled.
-  };
-
-
-  # Additional Program
-
-  programs.fish.enable = true;
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FILESYSTEMS & STORAGE
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Auto-mounting services
+  
   programs.gnome-disks.enable = true;
-  services.gvfs.enable = true;
-  services.udisks2.enable = true;
-  services.devmon.enable = true;
 
-  # Hardware
-  hardware.graphics.enable = true;
-  hardware.i2c.enable = true;
-
-  # Enable common container config files in /etc/containers
-  virtualisation.containers.enable = true;
-  virtualisation = {
-    podman = {
-      enable = true;
-
-      # Create a `docker` alias for podman, to use it as a drop-in replacement
-      dockerCompat = true;
-
-      # Required for containers under podman-compose to be able to talk to each other.
-      defaultNetwork.settings.dns_enabled = true;
-    };
-  };
-
-
-  # Disk Management
+  # Custom auto-mount point
   fileSystems."/mnt/Data" = {
     device = "UUID=d60c75ae-fc6a-4491-b591-91397bd46aaf";
     fsType = "ext4";
-    options = [ "nofail" ];  # ensures boot succeeds even if disk is missing
+    options = [ "nofail" ];
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # USER CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+ 
+
+  users.users.nexnc = {
+    isNormalUser = true;
+    description = "NEXNC";
+    extraGroups = [ 
+      "networkmanager" 
+      "wheel" 
+      "i2c" 
+      "libvirtd"
+      "video"      # For brightness control
+      "audio"      # For audio devices
+    ];
+    shell = pkgs.fish;
+  };
+
+  # Greetd user configuration
+  users.users.greeter = {
+    isSystemUser = true;
+    shell = pkgs.fish;  # or pkgs.bash
   };
 
 
+  # Home Manager integration
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    backupFileExtension = "backup";
+    users."nexnc" = import ./home/home.nix;
+  };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # ═══════════════════════════════════════════════════════════════════════════
+  # VIRTUALIZATION & CONTAINERS
+  # ═══════════════════════════════════════════════════════════════════════════
+  virtualisation = {
+    # Podman (Docker alternative)
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;  # Docker compatibility
+      defaultNetwork.settings.dns_enabled = true;
+    };
+    
+    # QEMU/KVM with libvirt
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = false;
+        swtpm.enable = true;
+      };
+    };
+    
+    spiceUSBRedirection.enable = true;
+  };
+  
+  programs.virt-manager.enable = true;
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SYSTEM SERVICES
+  # ═══════════════════════════════════════════════════════════════════════════
+  services = {
+
+    gvfs.enable    = true;
+    udisks2.enable = true;
+    blueman.enable = true;
+    tumbler.enable = true;
+
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;  # Security: key-only authentication
+        PermitRootLogin = "no";          # Security: disable root login
+      };
+    };
+    
+    printing.enable = true;
+    flatpak.enable = true;
+  };
+  
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
+  };
+
+  programs.fish.enable = true;
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SYSTEM PACKAGES
+  # ═══════════════════════════════════════════════════════════════════════════
   environment.systemPackages = with pkgs; [
-  
-  # System utilities
-  wget
-  git
-  gparted
-  udiskie
-  busybox
-  stow
-  libmtp
-  jmtpfs
-  gvfs
-  mtpfs
-  podman-tui
-  
-  # System-level Hyprland components
-  xdg-desktop-portal-hyprland
-  xdg-desktop-portal-gtk
-  hyprpolkitagent
-  
-  # Hardware utilities
-  ddcutil
-  
-  # Audio (system-level)
-  pavucontrol
-
+    # ─── Core Utilities ────────────────────────────────────────────────────
+    busybox
+    wget
+    curl
+    git
+    stow
+    htop
+    btop
+    
+    # ─── Filesystem & Disks ────────────────────────────────────────────────
+    gparted
+    udiskie
+    
+    # ─── Hyprland Ecosystem ────────────────────────────────────────────────
+    hyprpolkitagent
+    wl-clipboard       # Wayland clipboard utilities
+    
+    # ─── Audio & Hardware ──────────────────────────────────────────────────
+    pavucontrol
+    ddcutil
+    
+    # ─── Containers & VM ───────────────────────────────────────────────────
+    podman-tui
+    podman-compose
+    slirp4netns
+    fuse-overlayfs
+    
+    # ─── System Info & Fun ─────────────────────────────────────────────────
+    fastfetch
+    neofetch
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-   
-  # Additional Programs
-  programs.thunar.enable = true;
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  services.flatpak.enable = true;
-
-  # Virtualization
-
-  programs.virt-manager.enable = true;
-  users.groups.libvirtd.members = ["nexnc"];
-  virtualisation.libvirtd.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
-
-  # Open ports in the firewall.
-  networking.firewall = { 
-  enable = true;
-  
-  # Specific Port:
-    allowedTCPPorts = [ ];
-    allowedUDPPorts = [ ];
-
-  # Port Ranges:
-    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SECURITY
+  # ═══════════════════════════════════════════════════════════════════════════
+  security = {
+    polkit.enable = true;
+    sudo.wheelNeedsPassword = true;  # Require password for sudo
   };
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SYSTEM UPDATE
+  # ═══════════════════════════════════════════════════════════════════════════
 
+  system.autoUpgrade = {
+    enable = true;
+    allowReboot = false;
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SYSTEM STATE VERSION
+  # ═══════════════════════════════════════════════════════════════════════════
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
+  # on your system were taken. It's perfectly fine and recommended to leave
+  # this value at the release version of your first install.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
-
+  
+  system.stateVersion = "24.11";  # Did you read the comment?
 }
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTES & TODO
+# ═══════════════════════════════════════════════════════════════════════════
+# 
+# Next improvements to consider:
+# - [ ] Enable auto-upgrade: system.autoUpgrade.enable = true;
+# - [ ] Set up automated backups with restic or borg
+# - [ ] Configure firewall rules for specific services
+# - [ ] Add custom kernel parameters if needed
+# - [ ] Set up ZFS or BTRFS snapshots if using those filesystems
+# 
+# ═══════════════════════════════════════════════════════════════════════════
+
