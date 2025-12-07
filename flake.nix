@@ -1,26 +1,64 @@
+/*
+  ╔═══════════════════════════════════════════════════════╗
+  ║                                                       ║
+  ║        ███████╗██╗       █████╗ ██╗  ██╗███████╗      ║
+  ║        ██╔════╝██║      ██╔══██╗██║ ██╔╝██╔════╝      ║
+  ║        █████╗  ██║      ███████║█████╔╝ █████╗        ║
+  ║        ██╔══╝  ██║      ██╔══██║██╔═██╗ ██╔══╝        ║
+  ║        ██║     ███████╗ ██║  ██║██║  ██╗███████╗      ║
+  ║        ╚═╝     ╚══════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝      ║
+  ║                                                       ║
+  ╚═══════════════════════════════════════════════════════╝
+*/
+ 
 {
-  description = "Nixos config flake";
+  description = "Nixos config flake"; 
 
   inputs = {
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  NIXOS OFFICIAL PACKAGES
+    # ═══════════════════════════════════════════════════════════════════════════
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  HOME MANAGER
+    # ═══════════════════════════════════════════════════════════════════════════
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-
-
   outputs = { self, nixpkgs, ... }@inputs: {
-    # use "nixos", or your hostname as the name of the configuration
-    # it's a better practice than "default" shown in the video
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  SYSTEM CONFIGURATION
+    # ═══════════════════════════════════════════════════════════════════════════
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs;};
+      
+      # Target System Architecture
+      system = "x86_64-linux";
+      
+      # Pass inputs to modules
+      specialArgs = { inherit inputs; };
+      
       modules = [
+        # Hardware Import
+        ./hardware-configuration.nix
+
+        # Main Configuration 
         ./configuration.nix
+        
+        # Home Manager Module
         inputs.home-manager.nixosModules.home-manager
       ];
     };
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  UTILITIES
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Run `nix fmt` to auto-format your .nix files
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
   };
 }
+
