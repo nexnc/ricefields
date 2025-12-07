@@ -1,10 +1,7 @@
 { config, pkgs, ... }:
-
 {
   programs.lazygit = {
     enable = true;
-    # enableFishIntegration = true; <--- DELETE THIS LINE
-
     settings = {
       gui = {
         nerdFontsVersion = "3";
@@ -24,12 +21,13 @@
           searchingActiveBorderColor = [ "#f9e2af" ];
         };
       };
-
       git = {
-        paging = {
-          colorArg = "always";
-          pager = "delta --dark --paging=always";
-        };
+        pagers = [
+          {
+            colorArg = "always";
+            pager = "delta --dark --paging=always";
+          }
+        ];
       };
       
       keybindings = {

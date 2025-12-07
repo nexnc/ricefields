@@ -52,7 +52,14 @@
 
   # Enable Flakes
   
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+
+     experimental-features = [ "nix-command" "flakes" ]; # Enable Flakes
+     download-buffer-size = 268435456;  # 256 MB buffer size
+     max-jobs = "auto";  # Parallel Builds
+     cores = 0;  # use all available cores
+
+  };
 
   # Enable Greetd with tuigreet
 
@@ -60,7 +67,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-user-session --asterisks --cmd Hyprland";
         user = "greeter";
       };
     };

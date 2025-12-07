@@ -65,7 +65,7 @@
     ripgrep
     fd
     bat
-    du-dust
+    dust
     duf
     gdu
     tldr
