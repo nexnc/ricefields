@@ -11,6 +11,7 @@
     ./starship.nix
     ./ssh.nix
     ./ncmpcpp.nix
+    ./gitui.nix
   ];
 }
 
