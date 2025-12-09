@@ -92,6 +92,11 @@
     bandwhich       # Network monitor
     just            # Command runner
     hyperfine       # Benchmarking
+    pastebinit      # Copying text to dpaste.com
+
+    # ─── Nix ────────────────────────────────────────────────────────
+
+
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
