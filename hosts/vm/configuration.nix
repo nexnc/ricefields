@@ -240,7 +240,7 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     backupFileExtension = "backup";
-    users."nexnc" = import ./home/home.nix;
+    users."nexnc" = import ../../home/home.nix;
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
