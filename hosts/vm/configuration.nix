@@ -210,13 +210,6 @@
   
   programs.gnome-disks.enable = true;
 
-  # Custom auto-mount point
-  fileSystems."/mnt/Data" = {
-    device = "UUID=d60c75ae-fc6a-4491-b591-91397bd46aaf";
-    fsType = "ext4";
-    options = [ "nofail" ];
-  };
-
   # ═══════════════════════════════════════════════════════════════════════════
   # USER CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
@@ -317,10 +310,6 @@
     busybox
     wget
     curl
-    git
-    stow
-    htop
-    btop
     
     # ─── Filesystem & Disks ────────────────────────────────────────────────
     gparted
@@ -341,8 +330,6 @@
     fuse-overlayfs
     
     # ─── System Info & Fun ─────────────────────────────────────────────────
-    fastfetch
-    neofetch
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
