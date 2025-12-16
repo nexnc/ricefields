@@ -19,16 +19,15 @@
     
     shellAbbrs = {
       # Fish management
-      fishupdate = "source ~/.config/fish/config.fish";
-      fishconfig = "nvim ~/.config/fish/config.fish";
+      fishconfig = "sudo nvim /etc/nixos/home/modules/programs/fish.nix";
       ff = "fastfetch";
       music = "ncmpcpp";
       
       # NixOS management
-      flakeupdate = "sudo nix flake update --flake /etc/nixos/";
-      systemupdate = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+      flakeupdate = "sudo nix flake update --flake /etc/nixos#desktop";
+      systemupdate = "sudo nixos-rebuild switch --flake /etc/nixos#desktop";
       nixupdate = "sudo nixos-rebuild switch";
-      nixconfig = "sudo nvim /etc/nixos/configuration.nix";
+      nixconfig = "sudo nvim /etc/nixos/hosts/desktop/configuration.nix";
       homeconfig = "sudo nvim /etc/nixos/home/home.nix";
       
       # Navigation (modern CLI tools)
