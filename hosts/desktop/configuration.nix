@@ -122,9 +122,10 @@
   # HARDWARE CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
   hardware = {
-    graphics.enable = true;
     i2c.enable = true;
-    
+    amdgpu.opencl.enable = true;
+    amdgpu.initrd.enable = true;
+
     # Bluetooth
     bluetooth = {
       enable = true;
@@ -134,6 +135,14 @@
         Enable = "Source,Sink,Media,Socket";
       };
     };
+  };
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      mesa.opencl
+    ];
+
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
