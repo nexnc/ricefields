@@ -345,7 +345,8 @@
     slirp4netns
     fuse-overlayfs
     
-    # ─── System Info & Fun ─────────────────────────────────────────────────
+    # ─── System Libraries ─────────────────────────────────────────────────
+    libsecret
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -355,6 +356,13 @@
     polkit.enable = true;
     sudo.wheelNeedsPassword = true;  # Require password for sudo
   };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # KEYRINGS AND SECRETS MANAGEMENT
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SYSTEM UPDATE
