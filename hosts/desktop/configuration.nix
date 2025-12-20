@@ -269,6 +269,7 @@
       enable = true;
       dockerCompat = true;  # Docker compatibility
       defaultNetwork.settings.dns_enabled = true;
+
     };
     
     # QEMU/KVM with libvirt
