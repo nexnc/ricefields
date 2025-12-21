@@ -22,6 +22,7 @@
       fishconfig = "sudo nvim /etc/nixos/home/modules/programs/fish.nix";
       ff = "fastfetch";
       music = "ncmpcpp";
+      svim = "sudo nvim";
       
       # NixOS management
       flakeupdate = "sudo nix flake update --flake /etc/nixos#desktop";
