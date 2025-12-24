@@ -86,11 +86,33 @@
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
+
+   # wg-quick.interfaces = {
+   #   wg0 = {
+   #     address = [ "10.0.0.2/24" ];
+   #     privateKeyFile = "/root/wireguard-keys/private";
+       # generatePrivateKeyFile = true;  # NixOS will generate this for you
+   #   
+   #     peers = [
+   #       {
+   #         publicKey = "lvxDByhRpbSPeePzgdvefVONBI3kvsMThKHDhmyUCyI=";
+   #         allowedIPs = [ "0.0.0.0/0" ];
+   #         endpoint = "146.190.228.197:51820";
+   #         persistentKeepalive = 25;
+	  #  dynamicEndpointRefreshSeconds = 0;
+    #      }
+     #   ];
+      #};
+    #};
     
     # Firewall configuration
     firewall = {
       enable = true;
       trustedInterfaces = ["virbr0"];
+
+      allowedTCPPorts = [ 56000 ]; 
+      allowedUDPPorts = [ 56000 ];
+
       allowedTCPPortRanges = [ 
         { from = 1714; to = 1764; }  # KDE Connect / Valent
       ];
@@ -348,6 +370,8 @@
     
     # ─── System Libraries ─────────────────────────────────────────────────
     libsecret
+    sops
+    age
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -364,6 +388,33 @@
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.greetd.enableGnomeKeyring = true;
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SOPS-NIX CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  sops = {
+    # Path to encrypted secrets file (relative to this configuration.nix file)
+    defaultSopsFile = ../../secrets/user-password.yaml;
+
+    # Private age key used to decrypt the file
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+  };
+
+  # Use the decrypted password to set user's password
+  sops.secrets.password.neededForUsers = true;
+
+  # Cloudflare token secret
+  sops.secrets."cloudflared-token" = {
+    sopsFile = ../../secrets/cloudflared.yaml;
+    owner = "root";
+    group = "root";
+    mode = "0444";
+  };
+
+  # Assign decrypted password to user
+  users.users.nexnc.hashedPasswordFile = config.sops.secrets.password.path;
+
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SYSTEM UPDATE
