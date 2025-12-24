@@ -22,6 +22,12 @@
 	user = "git";
 	identityFile = "~/.ssh/git";
       };
+      "146.190.228.197" = {
+	hostname = "146.190.228.197";
+	user = "root";
+	identityFile = "~/.ssh/cloud";
+
+      };
     };
   };
   services.ssh-agent = {
