@@ -27,9 +27,15 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+   
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  SOPS-NIX
+    # ═══════════════════════════════════════════════════════════════════════════
+    sops-nix.url = "github:Mic92/sops-nix";
+
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, sops-nix, ... }@inputs: {
     
     # ═══════════════════════════════════════════════════════════════════════════
     #  SYSTEM CONFIGURATION
@@ -51,6 +57,8 @@
 	  ./hosts/desktop/containers
           # Home Manager Module
           inputs.home-manager.nixosModules.home-manager
+	  # Sops-nix Module
+	  inputs.sops-nix.nixosModules.sops
         ];
       };
 
@@ -64,6 +72,8 @@
 	  ./hosts/vm/configuration.nix
 	  # Home Manager Module
 	  inputs.home-manager.nixosModules.home-manager
+	  # Sops-nix module
+	  inputs.sops-nix.nixosModules.sops
 	];
       };
    };
