@@ -84,6 +84,7 @@
     valent
     filen-desktop
     filen-cli
+    wireguard-tools
 
     # ─── Terminal Tools ────────────────────────────────────────────────────────
     tmux
@@ -106,7 +107,6 @@
     pastebinit      # Copying text to dpaste.com
 
     # ─── Nix ────────────────────────────────────────────────────────
-
 
   ];
 
