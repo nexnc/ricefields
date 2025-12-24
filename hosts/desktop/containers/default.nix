@@ -5,6 +5,6 @@
     backend = "podman";
     containers = 
       (import ./portainer.nix) //
-      (import ./cloudflared.nix);
+      (import ./cloudflared.nix {inherit config pkgs;});
   };
 }
