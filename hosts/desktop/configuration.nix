@@ -127,9 +127,6 @@
   # ═══════════════════════════════════════════════════════════════════════════
   hardware = {
     i2c.enable = true;
-    amdgpu.opencl.enable = true;
-    amdgpu.initrd.enable = true;
-
     # Bluetooth
     bluetooth = {
       enable = true;
@@ -141,12 +138,14 @@
     };
   };
 
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      mesa.opencl
-    ];
+  hardware.amdgpu = {
+    initrd.enable = true;     # High-res early boot + avoids flicker
+    opencl.enable = true;     # ROCm OpenCL for AMD GPUs
+  };
 
+  hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -162,16 +161,6 @@
     };
     pulse.enable = true;
     wireplumber.enable = true;
-    
-    # Low latency configuration (optional)
-    # extraConfig.pipewire."92-low-latency" = {
-    #   "context.properties" = {
-    #     "default.clock.rate" = 48000;
-    #     "default.clock.quantum" = 32;
-    #     "default.clock.min-quantum" = 32;
-    #     "default.clock.max-quantum" = 32;
-    #   };
-    # };
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -244,7 +233,8 @@
       "i2c" 
       "libvirtd"
       "video"      # For brightness control
-      "audio"      # For audio devices
+      "audio" 
+      "render" # For audio devices
     ];
     shell = pkgs.fish;
   };
@@ -356,9 +346,11 @@
     libsecret
     sops
     age
-    vulkan-loader
-    vulkan-tools
     gamemode
+    vulkan-tools
+    vulkan-loader
+    amdgpu_top
+    mangohud
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -423,6 +415,23 @@
     enable = false;
     allowReboot = false;
   };
+
+
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # ENVIRONMENT SESSION VARIABLES
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  environment.sessionVariables = {
+    GSETTINGS_SCHEMA_DIR = "${pkgs.gsettings-desktop-schemas}/share/glib-2.0/schemas";
+    
+    # Force Vulkan to use the AMD RADV driver and ignore llvmpipe (CPU)
+    AMD_VULKAN_ICD = "RADV";
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/radeon_icd.x86_64.json";
+  };
+
+  environment.profileRelativeEnvVars.XDG_DATA_DIRS = [ "share" ];
+
 
   # ═══════════════════════════════════════════════════════════════════════════
   # SYSTEM STATE VERSION
