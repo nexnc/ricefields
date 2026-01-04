@@ -21,7 +21,6 @@
       package = pkgs.papirus-icon-theme;
     };
     
-    # Add these lines to force dark mode preference
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
     };
@@ -46,4 +45,9 @@
     font-awesome
     # ... your other packages
   ];
+  
+  # 4. Force GTK theme via environment variable (for stubborn apps like KiCad)
+  home.sessionVariables = {
+    GTK_THEME = "Catppuccin-Mocha-Standard-Mauve-Dark";
+  };
 }
