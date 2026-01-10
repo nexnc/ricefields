@@ -6,6 +6,7 @@
     shellInit = ''
       # Disable fish greeting
       set -g fish_greeting ""
+      set -gx PATH $HOME/.cargo/bin $PATH
     '';
     
     interactiveShellInit = ''
@@ -16,6 +17,7 @@
       bind "[A" history-search-backward
       bind "[B" history-search-forward
     '';
+
     
     shellAbbrs = {
       # Fish management
