@@ -95,7 +95,6 @@
     wireguard-tools
 
     # ─── Terminal Tools ────────────────────────────────────────────────────────
-    tmux
     wl-clipboard
     cliphist
     eza             # Better ls
