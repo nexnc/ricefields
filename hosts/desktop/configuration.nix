@@ -41,6 +41,18 @@
   # NIX CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
   nix = {
+
+    registry = {
+      # This creates your 'univ' macro
+      univ.to = {
+        type = "path";
+        path = "/etc/nixos/templates";
+      };
+
+      # This pins 'nixpkgs' to your system version and fixes the error
+      nixpkgs.flake = inputs.nixpkgs;
+    };
+
     settings = {
       # Flakes & nix-command
       experimental-features = [ "nix-command" "flakes" ];
@@ -80,7 +92,7 @@
   
   nixpkgs.config.allowUnfree = true;
 
-  # ═══════════════════════════════════════════════════════════════════════════
+   # ═══════════════════════════════════════════════════════════════════════════
   # NETWORKING & LOCALIZATION
   # ═══════════════════════════════════════════════════════════════════════════
   networking = {
