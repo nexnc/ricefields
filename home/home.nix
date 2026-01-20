@@ -72,7 +72,6 @@
     wine-wayland
     wine64
     steam
-    lutris
 
     # ─── Development ───────────────────────────────────────────────────────────
     python3
@@ -96,6 +95,7 @@
     glow 	    # Markdown Reader in Terminal
     figlet
     lolcat
+    universal-android-debloater
 
     # ─── Terminal Tools ────────────────────────────────────────────────────────
     wl-clipboard
