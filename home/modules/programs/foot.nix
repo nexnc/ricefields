@@ -6,7 +6,7 @@ programs.foot = {
   
   settings = {
     main = {
-      term = "xterm-256color";
+      term = "foot";
       font = "JetBrainsMonoNL Nerd Font:size=14";
       # Foot uses a single font declaration, variants are auto-detected
       dpi-aware = "yes";
