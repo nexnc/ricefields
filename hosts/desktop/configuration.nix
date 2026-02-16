@@ -113,8 +113,8 @@
       enable = true;
       trustedInterfaces = ["virbr0"];
 
-      allowedTCPPorts = [ 56000 ]; 
-      allowedUDPPorts = [ 56000 ];
+      allowedTCPPorts = [ 56000 25565 ]; 
+      allowedUDPPorts = [ 56000 19132 ];
 
       allowedTCPPortRanges = [ 
         { from = 1714; to = 1764; }  # KDE Connect / Valent
