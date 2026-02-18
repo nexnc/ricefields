@@ -7,6 +7,7 @@
       # Disable fish greeting
       set -g fish_greeting ""
       set -gx PATH $HOME/.cargo/bin $PATH
+      set -gx GPG_TTY (tty)
     '';
     
     interactiveShellInit = ''
