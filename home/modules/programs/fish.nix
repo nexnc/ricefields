@@ -33,6 +33,9 @@
       nixupdate = "sudo nixos-rebuild switch";
       nixconfig = "sudo nvim /etc/nixos/hosts/desktop/configuration.nix";
       homeconfig = "sudo nvim /etc/nixos/home/home.nix";
+
+      # Desktop management
+      niriconfig = "sudo nvim /etc/nixos/home/modules/desktop/niri.nix";
       
       # Navigation (modern CLI tools)
       cd = "z";  # zoxide replaces cd
