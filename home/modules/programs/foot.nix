@@ -11,6 +11,10 @@ programs.foot = {
       # Foot uses a single font declaration, variants are auto-detected
       dpi-aware = "yes";
     };
+
+    csd = {
+      preferred = "none";
+    };
     
     mouse = {
       hide-when-typing = "yes";
