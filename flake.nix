@@ -33,6 +33,11 @@
     # ═══════════════════════════════════════════════════════════════════════════
     sops-nix.url = "github:Mic92/sops-nix";
 
+    # 
+    # NIRI
+    #
+    niri.url = "github:sodiboo/niri-flake";
+
   };
 
   outputs = { self, nixpkgs, sops-nix, ... }@inputs: {
@@ -59,6 +64,8 @@
           inputs.home-manager.nixosModules.home-manager
 	  # Sops-nix Module
 	  inputs.sops-nix.nixosModules.sops
+	  # Niri Module
+	  inputs.niri.nixosModules.niri
         ];
       };
 
