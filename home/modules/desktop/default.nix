@@ -2,18 +2,17 @@
 
 {
 
-  home.packages = with pkgs; [
-    hyprshot    # Screenshots
-    hyprpicker  # Color picker
-  ];
-
   imports = [
-    ./hyprland/hyprland.nix
-    ./hyprland/hyprlock.nix
-    ./hyprland/hyprpaper.nix
+    # --- Compositor & Wallpaper ---
+    ./niri.nix
+    ./swww.nix
+
+    # --- Shared Wayland Tools ---
     ./waybar.nix
     ./wofi.nix
     ./swaync.nix
     ./theme.nix
+    ./wlogout.nix
+    ./hyprlock.nix
   ];
 }
