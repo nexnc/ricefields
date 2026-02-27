@@ -5,120 +5,142 @@
 ![NixOS](https://img.shields.io/badge/NixOS-25.11-5277C3.svg?style=for-the-badge&logo=nixos&logoColor=white)
 ![Flakes](https://img.shields.io/badge/Nix-Flakes-7EB5D6.svg?style=for-the-badge&logo=nixos&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
-![Security](https://img.shields.io/badge/Security-Hardened-red.svg?style=for-the-badge&logo=security&logoColor=white)
+![Security](https://img.shields.io/badge/Security-Hardened-red.svg?style=for-the-badge)
 
-**NixOS 25.11 (Xantusia) Infrastructure**  
-A modular, security-hardened, and declarative environment managed via Nix Flakes.
+A modular, security-hardened, declarative NixOS environment managed via Nix Flakes.
 
-[![SOPS](https://img.shields.io/badge/Secrets-SOPS--nix-orange?style=flat-square&logo=1password&logoColor=white)](https://github.com/Mic92/sops-nix)
-[![Age](https://img.shields.io/badge/Encryption-Age-blue?style=flat-square&logo=gnuprivacyguard&logoColor=white)](https://age-encryption.org/)
-[![Zen Kernel](https://img.shields.io/badge/Kernel-Zen-purple?style=flat-square&logo=linux&logoColor=white)](https://github.com/zen-kernel/zen-kernel)
-[![Fish Shell](https://img.shields.io/badge/Shell-Fish-green?style=flat-square&logo=fishshell&logoColor=white)](https://fishshell.com/)
-
-### 📦 Repository Mirrors
-
-[![GitLab](https://img.shields.io/badge/GitLab-Source%20of%20Truth-FC6D26?style=flat-square&logo=gitlab&logoColor=white)](https://gitlab.com/nexnc/ricefields)
-[![GitHub](https://img.shields.io/badge/GitHub-Mirror-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/gitnexnc/ricefields)
-[![Codeberg](https://img.shields.io/badge/Codeberg-Mirror-2185D0?style=flat-square&logo=codeberg&logoColor=white)](https://codeberg.org/nexnc/ricefields)
-
-> **Note**: The **GitLab repository** is the source of truth. GitHub and Codeberg are read-only mirrors updated via one-way synchronization. Please submit all issues and merge requests to GitLab.
+**Mirrors:** [GitLab](https://gitlab.com/nexnc/ricefields) (source of truth) · [GitHub](https://github.com/nexnc/ricefields)· [CodeBerg](https://codeberg.org/nexnc/ricefields)
 
 </div>
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture
 
-Ricefields is a professional-grade NixOS configuration designed for high-integrity systems. It utilizes a modular flake architecture to separate system logic from user-space configuration, ensuring a reproducible and atomic state across different hardware targets.
+Ricefields uses a modular flake structure that separates system-level configuration from user-space, ensuring reproducible and atomic state across hardware targets.
 
-## 🎯 Design Principles
-
-- **🔐 Cryptographic Sovereignty**: Zero-trust secret management using SOPS-nix and Age. No sensitive data (passwords, tokens, or private keys) is stored in plaintext within the repository.
-- **⚛️ Atomic Immutability**: The system utilizes `users.mutableUsers = false`. All user accounts and password hashes are defined strictly within the Nix configuration, preventing unauthorized runtime modifications.
-- **⚡ Performance Optimization**: Built on the Zen Kernel for improved desktop responsiveness and optimized for high-speed NVMe throughput.
-- **🦀 Modern Tooling**: Replaces legacy GNU utilities with high-performance Rust-based alternatives (e.g., `eza`, `bat`, `ripgrep`).
-
-## 🔒 Security Model
-
-The security of this infrastructure relies on asymmetric encryption and strictly defined access controls.
-
-- **Secret Management**: Sensitive strings are encrypted in `.yaml` files using AES-256-GCM via SOPS. These are only decrypted during the system activation phase by a local Age private key.
-- **Passphrase Entropy**: Core backups and master archives utilize 200+ bit entropy passphrases, rendering brute-force attacks mathematically infeasible.
-- **Integrity Enforcement**: Manual changes to `/etc/` or system-level binaries are discarded upon reboot or rebuild, maintaining a consistent "Source of Truth" from the Git repository.
-- **SSH Hardening**: Key-only authentication is enforced; password authentication and root login are disabled globally.
-
-## ⚙️ System Management & Workflow
-
-The environment is managed through a comprehensive set of Fish shell abbreviations designed for rapid infrastructure updates and maintenance.
-
-### NixOS Management
-
-| Command | Action |
-|---------|--------|
-| `systemupdate` | Rebuild system using the desktop flake output |
-| `flakeupdate` | Update all flake inputs for the desktop target |
-| `nixconfig` | Edit the primary system configuration |
-| `homeconfig` | Edit the Home Manager user configuration |
-| `fishconfig` | Edit the shell configuration and abbreviations |
-
-### Modern CLI Alternatives
-
-| Legacy | Modern Replacement | Description |
-|--------|-------------------|-------------|
-| `ls` | `eza` | Enhanced file listing with icons and Git integration |
-| `cat` | `bat` | Syntax highlighting and Git integration |
-| `grep` | `rg` (ripgrep) | Extremely fast recursive search |
-| `find` | `fd` | User-friendly alternative to find |
-| `top` | `btop` | Advanced TUI system monitor |
-| `df` | `duf` | Modern disk usage utility |
-| `du` | `dust` | Visual directory usage analyzer |
-
-## 🚀 Deployment and Disaster Recovery
-
-Deploying this configuration to a new machine requires manual injection of the Age private key to permit the decryption of system secrets.
-
-### 1. Key Restoration
-
-The private key must be placed in the standard SOPS location before the first build.
-
-```bash
-# Initialize the configuration directory
-mkdir -p ~/.config/sops/age/
-
-# Securely copy your Age private key (keys.txt) to the target path
-# Ensure the file contains your X25519 identity
-nano ~/.config/sops/age/keys.txt
-
-# Enforce strict file permissions
-chmod 600 ~/.config/sops/age/keys.txt
+```
+.
+├── flake.nix
+├── flake.lock
+├── home/
+│   ├── home.nix
+│   └── modules/
+│       ├── desktop/          # Niri, Waybar, Hyprlock, SwayNC, etc.
+│       │   ├── default.nix
+│       │   ├── hyprlock.nix
+│       │   ├── niri.nix
+│       │   ├── swaync.nix
+│       │   ├── swww.nix
+│       │   ├── theme.nix
+│       │   ├── waybar.nix
+│       │   ├── wlogout.nix
+│       │   └── wofi.nix
+│       ├── programs/         # CLI & GUI applications
+│       │   ├── default.nix
+│       │   ├── direnv.nix
+│       │   ├── fish.nix
+│       │   ├── foot.nix
+│       │   ├── fzf.nix
+│       │   ├── git.nix
+│       │   ├── gitui.nix
+│       │   ├── gpg.nix
+│       │   ├── lazygit.nix
+│       │   ├── ncmpcpp.nix
+│       │   ├── neovim.nix
+│       │   ├── ssh.nix
+│       │   ├── starship.nix
+│       │   ├── tmux.nix
+│       │   ├── yazi.nix
+│       │   └── zoxide.nix
+│       └── services/         # User services (MPD, etc.)
+│           ├── default.nix
+│           └── mpd.nix
+├── hosts/
+│   ├── desktop/
+│   │   ├── configuration.nix
+│   │   ├── hardware-configuration.nix
+│   │   └── containers/       # Podman/Docker services
+│   │       ├── cloudflared.nix
+│   │       ├── default.nix
+│   │       └── portainer.nix
+│   └── vm/
+│       └── configuration.nix
+├── secrets/                  # SOPS-nix encrypted secrets
+│   ├── cloudflared.yaml
+│   ├── key.age
+│   └── user-password.yaml
+└── templates/                # DevShell templates
+    ├── blank/
+    ├── cpp/
+    ├── python/
+    └── rust/
 ```
 
-### 2. Infrastructure Initialization
+---
+
+## Design Principles
+
+**Scrollable tiling** via Niri; a fluid, modern Wayland compositor workflow.
+
+**Cryptographic secret management** via SOPS-nix and Age. No sensitive data is stored in plaintext; secrets are decrypted only at system activation time using a local Age key.
+
+**Atomic immutability** enforced by `users.mutableUsers = false`. All user accounts and password hashes are declared within the Nix configuration and cannot drift.
+
+**Performance tuning** via the Zen kernel with AMD-specific optimizations (RADV, ROCm) and ZRAM enabled.
+
+---
+
+## Security
+
+- SSH is configured for key-only authentication; password login and root login are disabled.
+- Manual changes to system-level binaries are discarded on reboot the Git repository is the authoritative source of truth.
+- Secrets are scoped to system activation and never written to the Nix store in plaintext.
+
+---
+
+## System Management
+
+Fish abbreviations for common maintenance tasks:
+
+| Abbreviation   | Command                                                        |
+|----------------|----------------------------------------------------------------|
+| `systemupdate` | `sudo nixos-rebuild switch --flake /etc/nixos#desktop`        |
+| `flakeupdate`  | `sudo nix flake update --flake /etc/nixos#desktop`            |
+| `nixconfig`    | `sudo nvim /etc/nixos/hosts/desktop/configuration.nix`        |
+| `homeconfig`   | `sudo nvim /etc/nixos/home/home.nix`                          |
+| `fishconfig`   | `sudo nvim /etc/nixos/home/modules/programs/fish.nix`         |
+
+Modern CLI replacements:
+
+| Legacy  | Replacement     | Notes                     |
+|---------|-----------------|---------------------------|
+| `ls`    | `eza --icons`   | Enhanced file listing     |
+| `cd`    | `z` (zoxide)    | Fast directory jumping    |
+| `cat`   | `bat`           | Syntax-highlighted pager  |
+| `grep`  | `rg` (ripgrep)  | Fast recursive search     |
+| `top`   | `btop`          | Advanced system monitor   |
+| `df`    | `duf`           | Modern disk usage         |
+
+---
+
+## Deployment
+
+1. Place your Age private key at the SOPS-nix default location (e.g. `/var/lib/sops-nix/key.txt`).
+
+2. Clone and build:
 
 ```bash
-# Clone the repository
 git clone https://gitlab.com/nexnc/ricefields.git ~/ricefields
 cd ~/ricefields
-
-# Apply the desktop profile
 sudo nixos-rebuild switch --flake .#desktop
 ```
-
-## 🗺️ Roadmap
-
-- **Phase 1**: Transition to LUKS2 full-disk encryption on Gen5 NVMe hardware to protect data at rest.
-- **Phase 2**: Implement BTRFS as the primary filesystem, utilizing subvolumes for atomic snapshots and `snapper` integration.
-- **Phase 3**: Full Impermanence implementation, mounting the root directory on `tmpfs` to ensure a "pristine" state on every boot.
 
 ---
 
 <div align="center">
-
-**Author**: [NEXNC](https://gitlab.com/nexnc)  
-**Target**: NixOS 25.11 (Xantusia)  
-**License**: MIT
-
-[![Made with NixOS](https://img.shields.io/badge/Made%20with-NixOS-5277C3.svg?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
-[![Powered by Rust](https://img.shields.io/badge/Powered%20by-Rust-orange.svg?style=flat-square&logo=rust&logoColor=white)](https://www.rust-lang.org/)
-
+Author: NEXNC &nbsp;·&nbsp; Target: NixOS 25.11 (Xantusia) &nbsp;·&nbsp; License: MIT
+</div>
+<div align="center">
+Disclaimer: Currently in experimental stage, so things may break (sorry!)
 </div>
