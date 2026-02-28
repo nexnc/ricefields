@@ -82,9 +82,9 @@
     # ─── Development ───────────────────────────────────────────────────────────
     python3
     rustup
-    nmap
     gcc
     uv
+    pixi
 
     # ─── Desktop Utilities ─────────────────────────────────────────────────────
     fastfetch
