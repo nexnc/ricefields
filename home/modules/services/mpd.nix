@@ -24,4 +24,6 @@ services.mpd = {
       auto_update "yes"
     '';
   };
+
+services.mpd-mpris.enable = true;
 }
