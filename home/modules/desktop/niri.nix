@@ -49,7 +49,7 @@
       "Mod+L".action.spawn = "hyprlock";
       "Mod+Shift+W".action.spawn = "wlogout";
       "Mod+W".action.spawn = ["bash" "-c" "cliphist list | wofi --dmenu | cliphist decode | wl-copy"];
-      "Mod+M".action.spawn = ["foot" "-e" "ncmpcpp"];
+      "Mod+M".action.spawn = ["foot" "-e" "rmpc"];
 
       # ── Windows ───────────────────────────────────────────────
       "Mod+C".action.close-window = {};
