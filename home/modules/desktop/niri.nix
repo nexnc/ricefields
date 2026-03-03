@@ -47,12 +47,9 @@
       "Mod+B".action.spawn = "librewolf";
       "Mod+E".action.spawn = ["foot" "-e" "yazi"];
       "Mod+L".action.spawn = "hyprlock";
-      "Mod+Shift+Q".action = quit; 
       "Mod+W".action.spawn = ["bash" "-c" "cliphist list | wofi --dmenu | cliphist decode | wl-copy"];
       "Mod+M".action.spawn = ["foot" "-e" "rmpc"];
-      "Mod+Z".action = spawn "foot" "-e" "zellij" "attach" "-c" "main";
-      "Mod+Shift+P".action = spawn "systemctl" "poweroff";
-      "Mod+Shift+R".action = spawn "systemctl" "reboot";
+      "Mod+Z".action.spawn = ["foot" "-e" "zellij" "attach" "-c" "main"];
 
       # ── Windows ───────────────────────────────────────────────
       "Mod+C".action.close-window = {};
