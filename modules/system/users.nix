@@ -26,7 +26,10 @@
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { 
+      inherit inputs;
+      systemHostname = config.networking.hostName;
+    };
     backupFileExtension = "backup";
     users."nexnc" = import ../../modules/home/home.nix;
   };
