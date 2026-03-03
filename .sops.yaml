@@ -1,4 +1,6 @@
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     age: ["age1de4a79lgvq89y4cf8zcg0q4gct4tn0x59xt4y4n8p7fxa0tg8uaqtz3927"]
+  - path_regex: secrets/.*\.asc\.age$
+    age: ["age1de4a79lgvq89y4cf8zcg0q4gct4tn0x59xt4y4n8p7fxa0tg8uaqtz3927"]
 
