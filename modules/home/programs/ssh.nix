@@ -10,27 +10,18 @@
       "gitlab.com" = {
         hostname = "gitlab.com";
         user = "git";
-        identityFile = "~/.ssh/git";
+        identityFile = "~/.ssh/git.pub";
       };
       "github.com" = {
 	hostname = "github.com";
 	user = "git";
-	identityFile = "~/.ssh/git";
+	identityFile = "~/.ssh/git.pub";
       };
       "codeberg.org" = {
 	hostname = "codeberg.org";
 	user = "git";
-	identityFile = "~/.ssh/git";
-      };
-      "146.190.228.197" = {
-	hostname = "146.190.228.197";
-	user = "root";
-	identityFile = "~/.ssh/cloud";
-
+	identityFile = "~/.ssh/git.pub";
       };
     };
-  };
-  services.ssh-agent = {
-    enable = true;
   };
 }
