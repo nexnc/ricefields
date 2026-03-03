@@ -1,25 +1,26 @@
 { pkgs, ... }:
-
 {
-  # Install GPG and a terminal-based pinentry
   programs.gpg = {
     enable = true;
     settings = {
-      # Use a long-form key ID for better security/uniqueness
       keyid-format = "0xlong";
       with-fingerprint = true;
+      use-agent = true;
     };
   };
 
   services.gpg-agent = {
     enable = true;
-
+    enableSshSupport = true;
     pinentry.package = pkgs.pinentry-curses;
-
-    # Cache the passphrase for 8 hours (28800 seconds)
-    # This prevents having to re-type it for every commit
     defaultCacheTtl = 28800;
     maxCacheTtl = 28800;
-    
+    defaultCacheTtlSsh = 28800;
+    maxCacheTtlSsh = 28800;
   };
+
+  home.file.".gnupg/sshcontrol".text = ''
+    18A360A0734E3DAC98901A39A7563EF43D93CDF0
+    A9BA550548935FEE6F80771BEB46BA24C5973E17
+  '';
 }
