@@ -5,18 +5,28 @@
     settings = {
       keyid-format = "0xlong";
       with-fingerprint = true;
-      use-agent = true;
     };
   };
 
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
-    pinentry.package = pkgs.pinentry-curses;
+    pinentry.package = pkgs.pinentry-gnome3; 
+    
+    # 8 hours of productivity per unlock
     defaultCacheTtl = 28800;
-    maxCacheTtl = 28800;
+    maxCacheTtl = 43200; # 12 hour absolute max
     defaultCacheTtlSsh = 28800;
-    maxCacheTtlSsh = 28800;
+    maxCacheTtlSsh = 43200;
+
+    # Extra settings for reliability
+    extraConfig = ''
+      allow-preset-passphrase
+    '';
+  };
+
+  home.sessionVariables = {
+    SSH_AUTH_SOCK = "$(gpgconf --list-dirs agent-ssh-socket)";
   };
 
   home.file.".gnupg/sshcontrol".text = ''
