@@ -8,7 +8,7 @@
     ./swww.nix
 
     # --- Shared Wayland Tools ---
-   # ./waybar.nix
+    ./waybar.nix
     ./wofi.nix
     ./swaync.nix
     ./theme.nix
