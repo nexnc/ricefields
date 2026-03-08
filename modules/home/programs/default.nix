@@ -15,6 +15,7 @@
     ./direnv.nix
     ./gpg.nix
     ./zellij.nix
+    ./jujutsu.nix
   ];
 }
 
