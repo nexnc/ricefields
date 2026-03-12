@@ -56,7 +56,6 @@
 
     # ─── Media & Entertainment ─────────────────────────────────────────────────
     mpv
-    freetube
 
     # ─── Productivity & Creation ───────────────────────────────────────────────
     obs-studio
