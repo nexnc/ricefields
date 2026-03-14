@@ -16,6 +16,7 @@
     ./gpg.nix
     ./zellij.nix
     ./jujutsu.nix
+    ./mpv.nix
   ];
 }
 
