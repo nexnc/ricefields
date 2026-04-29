@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, inputs, ... }:
 {
   programs.niri = {
     enable = true;
@@ -29,6 +29,8 @@
         "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
         "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.RemoteDesktop" = [ "gnome" ];
       };
     };
   };
@@ -52,12 +54,12 @@
     tumbler.enable = true;
     printing.enable = true;
     flatpak.enable = true;
-    gnome.gnome-keyring.enable = true;
+    gnome.gnome-keyring.enable = lib.mkForce false;
   };
   security = {
     polkit.enable = true;
     sudo.wheelNeedsPassword = true;
-    pam.services.greetd.enableGnomeKeyring = true;
+   # pam.services.greetd.enableGnomeKeyring = true;
   };
   environment.profileRelativeEnvVars.XDG_DATA_DIRS = [ "share" ];
   environment.sessionVariables = {
