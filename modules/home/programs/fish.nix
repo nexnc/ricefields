@@ -65,6 +65,7 @@ in
 
       # ── Jujutsu ───────────────────────────────────────────────────────────────
       jjs  = "jj status";
+      jjsi = "jj split -i";
       jjl  = "jj log";
       jjdf = "jj diff";
       jjd  = "jj describe -m";
