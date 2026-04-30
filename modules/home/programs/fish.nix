@@ -64,14 +64,17 @@ in
       gg  = "lazygit";
 
       # ── Jujutsu ───────────────────────────────────────────────────────────────
-      jjd  = "jj describe -m";                          # jjd "feat: message"
-      jjp  = "jj bookmark set main -r @ && jj git push --remote origin -b main";
       jjs  = "jj status";
       jjl  = "jj log";
-      jjf  = "jj git fetch --remote origin";
       jjdf = "jj diff";
-      jjn  = "jj new";                                  # start a new change
-      jju  = "jj undo";                             
+      jjd  = "jj describe -m";
+      jjn  = "jj new";
+      jjf  = "jj git fetch --remote origin";
+      jju  = "jj undo";
+      # primary: use after jj split -i (@ is empty, safe to abandon)
+      jjp  = "jj abandon @ && jj bookmark set main -r @- && jj git push --remote origin -b main";
+      # reference only: use when @ has real described changes and no split was done
+      jjpp = "jj bookmark set main -r @ && jj git push --remote origin -b main";
     };
   };
 }
