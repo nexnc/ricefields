@@ -10,7 +10,7 @@
       efi.canTouchEfiVariables = true;
       timeout = 3;
     };
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "quiet" "splash" ];
     consoleLogLevel = 3;
     kernel.sysctl = {
