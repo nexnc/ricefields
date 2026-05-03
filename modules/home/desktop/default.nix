@@ -14,6 +14,6 @@
     ./theme.nix
     ./wlogout.nix
     ./hyprlock.nix
-    ./ironbar.nix
+    # ./ironbar.nix
   ];
 }
