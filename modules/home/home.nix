@@ -100,6 +100,8 @@
     android-tools
     pavucontrol
     bluetui
+    usbutils
+    pciutils
 
     # ─── Terminal Tools ────────────────────────────────────────────────────────
     wl-clipboard
