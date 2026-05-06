@@ -3,7 +3,8 @@
 {
   home.packages = with pkgs; [
     jujutsu
-    lazyjj # The TUI you want to use
+    lazyjj
+    difftastic
   ];
 
   programs.jujutsu = {
@@ -26,6 +27,15 @@
         editor = "nvim";
         pager = "less -FRX";
 	show-cryptographic-signatures = true;
+      };
+      diff = {
+        tool = "difft";
+      };
+      tools = {
+  	difft = {
+        program = "difft";
+        diff-args = ["$left" "$right"];
+        };
       };
       git = {
         colocate = true;
