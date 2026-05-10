@@ -7,5 +7,6 @@
     ./virtualization.nix
     ./sops.nix
     ./users.nix
+    ./stylix.nix
   ];
 }
