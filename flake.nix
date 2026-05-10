@@ -33,14 +33,22 @@
     # ═══════════════════════════════════════════════════════════════════════════
     sops-nix.url = "github:Mic92/sops-nix";
 
-    # 
-    # NIRI
-    #
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  NIRI
+    # ═══════════════════════════════════════════════════════════════════════════
     niri.url = "github:sodiboo/niri-flake";
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    #  STYLIX
+    # ═══════════════════════════════════════════════════════════════════════════
+    stylix = {
+      url = "github:danth/stylix/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
   };
 
-  outputs = { self, nixpkgs, sops-nix, ... }@inputs: {
+  outputs = { self, nixpkgs, sops-nix, stylix, ... }@inputs: {
     
     # ═══════════════════════════════════════════════════════════════════════════
     #  SYSTEM CONFIGURATION
@@ -49,18 +57,19 @@
 
       "kerr" = nixpkgs.lib.nixosSystem {
     	system = "x86_64-linux";
-    	specialArgs = { inherit inputs; };
+    	specialArgs = { inherit inputs; currentTheme = "synth-midnight-dark";};
    	modules = [
       	  ./hosts/kerr/default.nix
       	  inputs.home-manager.nixosModules.home-manager
       	  inputs.sops-nix.nixosModules.sops
       	  inputs.niri.nixosModules.niri
+	  inputs.stylix.nixosModules.stylix
     	];
      };
 
      "vm" = nixpkgs.lib.nixosSystem {
        system = "x86_64-linux";
-       specialArgs = { inherit inputs; };
+       specialArgs = { inherit inputs; currentTheme = "nord";};
        modules = [
         ./hosts/vm/default.nix
         inputs.home-manager.nixosModules.home-manager
