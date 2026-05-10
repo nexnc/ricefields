@@ -53,7 +53,7 @@
     librewolf
     thunderbird
     signal-desktop
-    fractal
+   # fractal
 
     # ─── Media & Entertainment ─────────────────────────────────────────────────
 
