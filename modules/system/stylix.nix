@@ -4,15 +4,14 @@ let
   themes = {
     mocha = {
       scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-      wallpaper = /home/nexnc/Pictures/Wallpapers/mocha.jpg;
+      wallpaper = ../../wallpapers/nix.jpg;
     };
-    nord = {
-      scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
-      wallpaper = /home/nexnc/Pictures/Wallpapers/nordic.jpg;
+    synth-midnight-dark = {
+      scheme = "${pkgs.base16-schemes}/share/themes/synth-midnight-dark.yaml";
+      wallpaper = ../../wallpapers/nix.jpg;
     };
   };
   
-  # Grab the set from the list, or default to mocha if something goes wrong
   selected = themes."${currentTheme}" or themes.mocha;
 
 in {
@@ -28,9 +27,34 @@ in {
       size = 24;
     };
 
-    fonts.monospace = {
-      package = pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
-      name = "JetBrainsMono Nerd Font";
+    fonts = {
+      monospace = {
+        package = pkgs.nerd-fonts.jetbrains-mono;
+        name = "JetBrainsMono Nerd Font";
+      };
+
+      sansSerif = {
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Sans";
+      };
+
+      serif = {
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Serif";
+      };
+
+      # Added Emoji support
+      emoji = {
+        package = pkgs.noto-fonts-color-emoji;
+        name = "Noto Color Emoji";
+      };
+
+      sizes = {
+        applications = 11;
+        terminal = 14;
+        desktop = 11;
+        popups = 11;
+      };
     };
   };
 }
