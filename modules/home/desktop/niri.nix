@@ -19,16 +19,9 @@
         { proportion = 0.66667; }
       ];
 
-      # Configure the aesthetic focus ring
-      focus-ring = {
-        width = 2;
-        active.color = "#89b4fa";
-        inactive.color = "#313244";
-      };
 
-      border.enable = false; 
+      #border.enable = false; 
     };
-
     # Auto-save screenshots here
     screenshot-path = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png";
 
