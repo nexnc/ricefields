@@ -26,8 +26,6 @@
     screenshot-path = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png";
 
     spawn-at-startup = [
-      { command = [ "${pkgs.swww}/bin/swww-daemon" ]; }
-      { command = [ "${pkgs.swww}/bin/swww" "img" "/home/nexnc/Pictures/Wallpapers/wallpaper.jpg" ]; }
       { command = [ "swaync" ]; }
       { command = [ "udiskie" "-t" ]; }
       { command = [ "wl-paste" "--watch" "cliphist" "store" ]; }
