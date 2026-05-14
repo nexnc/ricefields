@@ -43,6 +43,9 @@
       "Mod+M".action.spawn = ["foot" "-e" "rmpc"];
       "Mod+Z".action.spawn = ["foot" "-e" "zellij" "attach" "-c" "main"];
 
+      # ── Custom Scripts ──────────────────────────────────────────────────────
+      "Mod+Alt+W".action.spawn = [ "wall-cycle" ];
+
       # ── Windows ───────────────────────────────────────────────
       "Mod+C".action.close-window = {};
       "Mod+F".action.maximize-column = {};
