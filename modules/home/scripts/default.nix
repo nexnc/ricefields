@@ -1,0 +1,5 @@
+{
+  imports = [
+    ./wall-cycle.nix
+  ];
+}
