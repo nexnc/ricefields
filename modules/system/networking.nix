@@ -1,8 +1,6 @@
 { ... }:
 {
   networking = {
-    hostName = "kerr";
-     domain = "nexnc.com";
     networkmanager.enable = true;
     firewall = {
       enable = true;
