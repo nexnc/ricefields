@@ -6,4 +6,7 @@
     ./containers
     ../../modules/system
   ];
+
+  networking.hostName = "kerr";
+  networking.domain = "nexnc.com";
 }
