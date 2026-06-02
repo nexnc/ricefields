@@ -46,6 +46,8 @@
         "davinci-resolve"
 	"steam-unwrapped"
 	"steam"
+	"steam-original"
+	"steam-run"
       ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -73,7 +75,6 @@
     gamescope
     protontricks
     wine-wayland
-    steam
     lutris
 
     # ─── Development ───────────────────────────────────────────────────────────
