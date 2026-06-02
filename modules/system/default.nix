@@ -8,5 +8,6 @@
     ./sops.nix
     ./users.nix
     ./stylix.nix
+    ./steam.nix
   ];
 }
