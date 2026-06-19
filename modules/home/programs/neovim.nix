@@ -47,7 +47,7 @@
       plenary-nvim
     ];
 
-    extraLuaConfig = ''
+    initLua = ''
       -- 1. OPTIONS
       vim.opt.clipboard = "unnamedplus"
       vim.opt.number = true
