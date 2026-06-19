@@ -267,6 +267,5 @@
     
     # Formatters
     black
-    nodePackages.prettier
   ];
 }
