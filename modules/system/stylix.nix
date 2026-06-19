@@ -2,17 +2,13 @@
 
 let
   themes = {
-    mocha = {
-      scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-      wallpaper = ../../wallpapers/nix.jpg;
-    };
-    synth-midnight-dark = {
-      scheme = "${pkgs.base16-schemes}/share/themes/synth-midnight-dark.yaml";
+    rose-pine = {
+      scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
       wallpaper = ../../wallpapers/nix.jpg;
     };
   };
   
-  selected = themes."${currentTheme}" or themes.mocha;
+  selected = themes."${currentTheme}" or themes.rose-pine;
 
 in {
   stylix = {
