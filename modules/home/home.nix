@@ -19,7 +19,7 @@
   # ═══════════════════════════════════════════════════════════════════════════
   home.username      = "nexnc";
   home.homeDirectory = "/home/nexnc";
-  home.stateVersion  = "25.11"; # Updated to match system version
+  home.stateVersion  = "26.05";
 
   # ═══════════════════════════════════════════════════════════════════════════
   #  MODULE IMPORTS
