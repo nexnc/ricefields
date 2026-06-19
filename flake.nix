@@ -57,7 +57,7 @@
 
       "kerr" = nixpkgs.lib.nixosSystem {
     	system = "x86_64-linux";
-    	specialArgs = { inherit inputs; currentTheme = "synth-midnight-dark";};
+    	specialArgs = { inherit inputs; currentTheme = "rose-pine";};
    	modules = [
       	  ./hosts/kerr/default.nix
       	  inputs.home-manager.nixosModules.home-manager
@@ -69,7 +69,7 @@
 
      "vm" = nixpkgs.lib.nixosSystem {
        system = "x86_64-linux";
-       specialArgs = { inherit inputs; currentTheme = "nord";};
+       specialArgs = { inherit inputs; currentTheme = "rose-pine";};
        modules = [
         ./hosts/vm/default.nix
         inputs.home-manager.nixosModules.home-manager
