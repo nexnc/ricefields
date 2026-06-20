@@ -30,6 +30,7 @@
       { command = [ "udiskie" "-t" ]; }
       { command = [ "wl-paste" "--watch" "cliphist" "store" ]; }
       { command = [ "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1" ]; }
+      { command = [ "filen-desktop" ]; }
     ];
 
     binds = {
