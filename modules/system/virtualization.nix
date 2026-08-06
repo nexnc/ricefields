@@ -11,8 +11,8 @@
       enable = true;
       qemu = {
         package = pkgs.qemu_kvm;
-        runAsRoot = false;
-	runAsUser = true;
+        runAsRoot = true;
+	#runAsUser = true;
         swtpm.enable = true;
       };
     };
