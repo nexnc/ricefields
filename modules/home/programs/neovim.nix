@@ -8,12 +8,11 @@
 
     plugins = with pkgs.vimPlugins; [
       # Core UI & Status
-      catppuccin-nvim
       lualine-nvim
       nvim-web-devicons
       nvim-tree-lua
       which-key-nvim
-      
+
       # Git Integration
       gitsigns-nvim
 
@@ -25,8 +24,8 @@
       comment-nvim
       nvim-surround
 
-      # Treesitter
-      (nvim-treesitter.withPlugins (p: with p; [ 
+      # Treesitter Parsers
+      (nvim-treesitter.withPlugins (p: with p; [
         nix lua python rust toml bash json yaml markdown
       ]))
 
@@ -95,17 +94,21 @@
       require('Comment').setup()
       require('nvim-surround').setup()
 
-      -- 6. TREESITTER
-      require('nvim-treesitter.configs').setup({
-        highlight = { enable = true },
-        indent = { enable = true },
+      -- 6. MODERN TREESITTER (Neovim Native Engine)
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
       })
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      vim.wo.foldmethod = "expr"
+      vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
       -- 7. TELESCOPE
       require('telescope').setup({
         defaults = {
           file_ignore_patterns = { "node_modules", ".git/", "__pycache__" },
-          layout_config = { 
+          layout_config = {
             prompt_position = "top",
             horizontal = { preview_width = 0.55 },
           },
@@ -113,7 +116,7 @@
         }
       })
 
-      -- 8. NEOVIM 0.11 LSP CONFIG
+      -- 8. NEOVIM LSP CONFIG
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
       -- Python (Pyright)
@@ -123,17 +126,17 @@
       })
       vim.lsp.enable('pyright')
 
-      -- Rust (using rustup)
+      -- Rust (rust-analyzer)
       vim.lsp.config('rust_analyzer', {
         cmd = { "rust-analyzer" },
         capabilities = capabilities,
         settings = {
           ["rust-analyzer"] = {
-	  check = { 
-	    command = "clippy",
-	  },
-	  checkOnSave = true,
-	 }
+            check = {
+              command = "clippy",
+            },
+            checkOnSave = true,
+          }
         }
       })
       vim.lsp.enable('rust_analyzer')
@@ -153,7 +156,7 @@
           null_ls.builtins.formatting.prettier,
         },
         on_attach = function(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
+          if client:supports_method("textDocument/formatting") then
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = bufnr,
               callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end,
@@ -192,24 +195,24 @@
         { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Grep" },
         { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
         { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help" },
-        
+
         -- File Explorer
         { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer" },
-        
+
         -- Git
         { "<leader>g", group = "Git" },
         { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview Change" },
         { "<leader>gb", "<cmd>Gitsigns blame_line<cr>", desc = "Git Blame" },
         { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Reset Hunk" },
         { "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", desc = "Stage Hunk" },
-        
+
         -- LSP
         { "<leader>l", group = "LSP" },
         { "<leader>lr", vim.lsp.buf.rename, desc = "Rename" },
         { "<leader>la", vim.lsp.buf.code_action, desc = "Code Action" },
         { "<leader>lf", vim.lsp.buf.format, desc = "Format" },
         { "<leader>ld", vim.diagnostic.open_float, desc = "Line Diagnostics" },
-        
+
         { "gd", vim.lsp.buf.definition, desc = "Go to Definition" },
         { "gr", "<cmd>Telescope lsp_references<cr>", desc = "References" },
         { "gi", vim.lsp.buf.implementation, desc = "Go to Implementation" },
@@ -248,9 +251,7 @@
       vim.keymap.set("n", "n", "nzzzv")
       vim.keymap.set("n", "N", "Nzzzv")
 
-      -- 12. UI THEME
-      require("catppuccin").setup({ flavour = "mocha" })
-      vim.cmd.colorscheme "catppuccin"
+      -- 12. UI COMPONENTS
       require('lualine').setup()
       require('nvim-tree').setup({
         view = { width = 30 },
@@ -263,8 +264,8 @@
   home.packages = with pkgs; [
     # Language Servers
     pyright
-    nil  # Nix LSP
-    
+    nil           # Nix LSP
+
     # Formatters
     black
   ];
