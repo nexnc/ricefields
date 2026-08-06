@@ -55,6 +55,8 @@
       vim.opt.expandtab = true
       vim.opt.termguicolors = true
       vim.g.mapleader = " "
+      vim.opt.foldlevel = 99
+      vim.opt.foldlevelstart = 99
 
       -- Quality of life options
       vim.opt.ignorecase = true
