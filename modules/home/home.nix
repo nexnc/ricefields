@@ -57,8 +57,6 @@
     # ─── Browsers & Communication ──────────────────────────────────────────────
     librewolf
     thunderbird
-    signal-desktop
-   # fractal
 
     # ─── Media & Entertainment ─────────────────────────────────────────────────
 
