@@ -6,9 +6,26 @@ let
       scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
       wallpaper = ../../wallpapers/nix.jpg;
     };
+
+    eldritch = {
+      scheme = "${pkgs.base16-schemes}/share/themes/eldritch.yaml";
+      wallpaper = ../../wallpapers/nix.jpg;
+    };
+
+    mellow-purple = {
+      scheme = "${pkgs.base16-schemes}/share/themes/mellow-purple.yaml";
+      wallpaper = ../../wallpapers/nix.jpg;
+    };
+
+    catppuccin-mocha = {
+      scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+      wallpaper = ../../wallpapers/nix.jpg;
+    };
+
+
   };
   
-  selected = themes."${currentTheme}" or themes.rose-pine;
+  selected = themes."${currentTheme}" or themes.catppuccin-mocha;
 
 in {
   stylix = {
@@ -39,7 +56,6 @@ in {
         name = "DejaVu Serif";
       };
 
-      # Added Emoji support
       emoji = {
         package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
