@@ -1,69 +1,174 @@
 { config, pkgs, ... }:
+
 {
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
-    settings = {
-      "$schema" = "https://starship.rs/config-schema.json";
-      
-      # Correct palette name for Stylix integration
-      palette = "base16";
 
-      # Cleaned up format (Removed backslashes and floating separators)
-      format = "$os$username$directory$git_branch$git_status$rust$nodejs$time $line_break$character";
+    settings = {
+
+      # ───────────────────────────────────────────
+      # Prompt layout
+      # ───────────────────────────────────────────
+
+      format =
+        "[░▒▓](#a3aed2)"
+        + "$os"
+        + "[](bg:#769ff0 fg:#a3aed2)"
+        + "$directory"
+        + "[](fg:#769ff0 bg:#394260)"
+        + "$git_branch"
+        + "$git_status"
+        + "[](fg:#394260 bg:#212736)"
+        + "$nix_shell"
+        + "$c"
+        + "$rust"
+        + "$python"
+        + "[](fg:#212736 bg:#1d2230)"
+        + "$time"
+        + "[ ](fg:#1d2230)"
+        + "$line_break"
+        + "$character";
+
+
+      # ───────────────────────────────────────────
+      # OS
+      # ───────────────────────────────────────────
 
       os = {
         disabled = false;
-        symbols = { NixOS = " "; Linux = "󰌽 "; Ubuntu = "󰕈 "; Arch = "󰣇 "; };
-        style = "bg:base09 fg:base00";
+        style = "bg:#a3aed2 fg:#090c0c";
         format = "[ $symbol ]($style)";
+
+        symbols = {
+          Arch = "󰣇";
+          Debian = "󰣚";
+          Fedora = "󰣛";
+          NixOS = "";
+          Linux = ""; # Tux icon
+        };
       };
 
-      username = {
-        show_always = true;
-        style_user = "bg:base09 fg:base00";
-        style_root = "bg:base08 fg:base00";
-        format = "[$user ]($style)";
-      };
+
+      # ───────────────────────────────────────────
+      # Directory
+      # ───────────────────────────────────────────
 
       directory = {
-        style = "bg:base0A fg:base00";
-        # This triangle bridges Username(09) to Directory(0A)
-        format = "[](fg:base09 bg:base0A)[ $path ]($style)";
+        style = "fg:#e3e5e5 bg:#769ff0";
+        format = "[ $path ]($style)";
+
+        truncation_length = 3;
+        truncation_symbol = "…/";
+
+        substitutions = {
+          "Documents" = "󰈙 ";
+          "Downloads" = " ";
+          "Music" = " ";
+          "Pictures" = " ";
+        };
       };
+
+
+      # ───────────────────────────────────────────
+      # Git branch
+      # ───────────────────────────────────────────
 
       git_branch = {
-        symbol = " ";
-        style = "bg:base0B fg:base00";
-        # This triangle bridges Directory(0A) to Git(0B)
-        format = "[](fg:base0A bg:base0B)[ $symbol$branch ]($style)";
+        symbol = "";
+        style = "bg:#394260";
+
+        format =
+          "[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)";
       };
+
+
+      # ───────────────────────────────────────────
+      # Git status
+      # ───────────────────────────────────────────
 
       git_status = {
-        style = "bg:base0B fg:base00";
-        format = "[ $all_status$ahead_behind ]($style)";
+        style = "bg:#394260";
+
+        format =
+          "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)";
       };
 
-      rust = {
-        symbol = " ";
-        style = "bg:base0D fg:base00";
-        # This triangle bridges Git(0B) to Rust(0D)
-        format = "[](fg:base0B bg:base0D)[ $symbol$version ]($style)";
+
+      # ───────────────────────────────────────────
+      # Nix shell (flakes / direnv)
+      # ───────────────────────────────────────────
+
+      nix_shell = {
+        disabled = false;
+        symbol = "󱄅";
+        style = "bg:#212736";
+
+        format =
+          "[[ $symbol $state ](fg:#769ff0 bg:#212736)]($style)";
       };
+
+
+      # ───────────────────────────────────────────
+      # C / C++
+      # ───────────────────────────────────────────
+
+      c = {
+        symbol = "";
+        style = "bg:#212736";
+
+        format =
+          "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+      };
+
+
+      # ───────────────────────────────────────────
+      # Rust
+      # ───────────────────────────────────────────
+
+      rust = {
+        symbol = "";
+        style = "bg:#212736";
+
+        format =
+          "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+      };
+
+
+      # ───────────────────────────────────────────
+      # Python
+      # ───────────────────────────────────────────
+
+      python = {
+        symbol = "";
+        style = "bg:#212736";
+
+        format =
+          "[[ $symbol ($version)(\\($virtualenv\\)) ](fg:#769ff0 bg:#212736)]($style)";
+      };
+
+
+      # ───────────────────────────────────────────
+      # Time
+      # ───────────────────────────────────────────
 
       time = {
         disabled = false;
         time_format = "%R";
-        style = "bg:base02 fg:base05";
-        # Bridges last module to Time(02). 
-        # Note: If no Rust/Node, this might look slightly off, which is why 
-        # putting triangles INSIDE modules is safer.
-        format = "[](fg:base0B bg:base02)[  $time ]($style)";
+        style = "bg:#1d2230";
+
+        format =
+          "[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)";
       };
 
+
+      # ───────────────────────────────────────────
+      # Prompt character
+      # ───────────────────────────────────────────
+
       character = {
-        success_symbol = "[](bold fg:base0B)";
-        error_symbol = "[](bold fg:base08)";
+        success_symbol = "[❯](bold green)";
+        error_symbol = "[❯](bold red)";
       };
     };
   };
