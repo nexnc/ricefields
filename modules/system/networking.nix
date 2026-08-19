@@ -17,6 +17,7 @@
   };
 
   time.timeZone = "Europe/Berlin";
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
