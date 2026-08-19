@@ -10,8 +10,9 @@
       efi.canTouchEfiVariables = true;
       timeout = 3;
     };
+    initrd.systemd.enable = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "quiet" "splash" ];
+    kernelParams = [ "quiet" "splash" "noresume" ];
     consoleLogLevel = 3;
     kernel.sysctl = {
       "vm.swappiness" = 10;
