@@ -12,6 +12,7 @@
     ];
     extraOptions = [
       "--privileged"
+      "--pull=missing" # Prevents registry polling on boot
     ];
   };
 }
