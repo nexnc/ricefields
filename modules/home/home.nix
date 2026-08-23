@@ -137,6 +137,7 @@
     # Core defaults
     EDITOR   = "nvim";
     VISUAL   = "nvim";
+    SUDO_EDITOR = "nvim";
     TERMINAL = "foot";
     BROWSER  = "librewolf";
 
