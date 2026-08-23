@@ -68,6 +68,15 @@
       vim.opt.splitright = true
       vim.opt.splitbelow = true
 
+      -- Filter out intrusive LSP RPC panics while typing
+      local orig_notify = vim.notify
+      vim.notify = function(msg, level, opts)
+        if type(msg) == "string" and (msg:find("rust_analyzer: %-32603") or msg:find("request handler panicked")) then
+          return
+        end
+        orig_notify(msg, level, opts)
+      end
+
       -- 2. GIT SIGNS SETUP
       require('gitsigns').setup({
         signs = {
