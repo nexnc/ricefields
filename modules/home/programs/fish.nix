@@ -36,6 +36,8 @@ in
       # ── General ───────────────────────────────────────────────────────────
       ff    = "fastfetch";
       music = "rmpc";
+      bt = "bluetui";
+      headphone = "bluetoothctl connect E8:EE:CC:C7:CA:E6";
 
       # ── Navigation ────────────────────────────────────────────────────────
       cd   = "z";
