@@ -54,6 +54,10 @@
       "Mod+V".action.toggle-window-floating = {};
       "Mod+Space".action.switch-focus-between-floating-and-tiling = {};
       "Mod+Shift+R".action.switch-preset-column-width = {};
+      "Mod+Comma".action.consume-window-into-column = {};
+      "Mod+Period".action.expel-window-from-column = {};
+      "Mod+BracketLeft".action.consume-or-expel-window-left = {};
+      "Mod+BracketRight".action.consume-or-expel-window-right = {};
 
       # ── Focus ─────────────────────────────────────────────────
       "Mod+Left".action.focus-column-left = {};
