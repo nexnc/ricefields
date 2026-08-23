@@ -27,15 +27,15 @@ in
       nixupdate    = "sudo nixos-rebuild switch --flake ${flakePath}#${host}";
 
       # ── Config Shortcuts ──────────────────────────────────────────────────
-      nixconfig  = "sudo nvim ${flakePath}/hosts/${host}/default.nix";
-      homeconfig = "sudo nvim ${flakePath}/modules/home/home.nix";
-      fishconfig = "sudo nvim ${flakePath}/modules/home/programs/fish.nix";
-      niriconfig = "sudo nvim ${flakePath}/modules/home/desktop/niri.nix";
+      nixconfig  = "nvim ${flakePath}/hosts/${host}/default.nix";
+      homeconfig = "nvim ${flakePath}/modules/home/home.nix";
+      fishconfig = "nvim ${flakePath}/modules/home/programs/fish.nix";
+      niriconfig = "nvim ${flakePath}/modules/home/desktop/niri.nix";
+      flakeconfig = "nvim ${flakePath}/flake.nix";
 
       # ── General ───────────────────────────────────────────────────────────
       ff    = "fastfetch";
       music = "rmpc";
-      svim  = "sudo nvim";
 
       # ── Navigation ────────────────────────────────────────────────────────
       cd   = "z";
