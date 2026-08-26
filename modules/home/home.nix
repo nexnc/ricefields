@@ -43,7 +43,6 @@
   # ═══════════════════════════════════════════════════════════════════════════
     nixpkgs.config.allowUnfreePredicate = pkg:
       builtins.elem (pkgs.lib.getName pkg) [
-        "davinci-resolve"
 	"steam-unwrapped"
 	"steam"
 	"steam-original"
@@ -63,7 +62,6 @@
     # ─── Productivity & Creation ───────────────────────────────────────────────
     obs-studio
     gimp
-    # davinci-resolve
     kicad
     godot
 
@@ -84,6 +82,7 @@
 
     # ─── Desktop Utilities ─────────────────────────────────────────────────────
     fastfetch
+    ffmpeg
     yt-dlp
     aria2
     p7zip
