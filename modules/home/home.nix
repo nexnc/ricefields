@@ -55,6 +55,7 @@
   home.packages = with pkgs; [
     # ─── Browsers & Communication ──────────────────────────────────────────────
     librewolf
+    floorp-bin
     thunderbird
 
     # ─── Media & Entertainment ─────────────────────────────────────────────────
