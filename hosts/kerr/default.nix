@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./hardware.nix
     ./containers
+    ./LLM/ollama.nix
     ../../modules/system
   ];
 
