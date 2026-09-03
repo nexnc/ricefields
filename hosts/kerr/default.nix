@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
     ./hardware.nix
     ./containers
-    ./LLM/ollama.nix
+    ./LocalAI
     ../../modules/system
   ];
 
