@@ -2,6 +2,14 @@
 {
   networking = {
     networkmanager.enable = true;
+
+
+    nameservers = [
+      "1.0.0.1"
+      "8.8.8.8"
+    ];
+
+
     firewall = {
       enable = true;
       trustedInterfaces = [ "virbr0" ];
