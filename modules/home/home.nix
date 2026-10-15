@@ -55,7 +55,6 @@
   home.packages = with pkgs; [
     # ─── Browsers & Communication ──────────────────────────────────────────────
     librewolf
-    floorp-bin
     thunderbird
 
     # ─── Media & Entertainment ─────────────────────────────────────────────────
@@ -63,8 +62,6 @@
     # ─── Productivity & Creation ───────────────────────────────────────────────
     obs-studio
     gimp
-    kicad
-    godot
 
 
     # ─── Gaming ────────────────────────────────────────────────────────────────
@@ -104,6 +101,7 @@
     bluetui
     usbutils
     pciutils
+    ncdu
 
     # ─── Terminal Tools ────────────────────────────────────────────────────────
     wl-clipboard
