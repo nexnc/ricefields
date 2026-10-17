@@ -13,10 +13,11 @@
     ./rmpc.nix
     ./gitui.nix
     ./direnv.nix
-    ./gpg.nix
+    # ./gpg.nix
     ./zellij.nix
     ./jujutsu.nix
     ./mpv.nix
+    ./sequoia.nix
   ];
 }
 
