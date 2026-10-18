@@ -10,8 +10,10 @@ in
     shellInit = ''
       set -g fish_greeting ""
       set -gx PATH $HOME/.cargo/bin $PATH
-      set -gx GPG_TTY (tty)
-      set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+      set -gx SSH_AUTH_SOCK $XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh
+      if status is-interactive
+        set -gx GPG_TTY (tty)
+      end
     '';
 
     interactiveShellInit = ''
