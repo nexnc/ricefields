@@ -3,7 +3,7 @@
 {
   boot.initrd.kernelModules = [ "amdgpu" ];
 
-  # Enable Ollama with ROCm acceleration
+  # Enable Ollama with Vulkan
   services.ollama = {
     enable = true;
     package = pkgs.ollama-vulkan;
@@ -15,7 +15,7 @@
       OLLAMA_ORIGINS = "*";
     };
     
-    loadModels = [ "llama3.2:3b" "qwen2.5-coder:7b" "deepseek-r1:8b" ];
+    loadModels = [ ];
   };
 
   users.users.ollama = {
@@ -27,7 +27,7 @@
     enable = true;
     port = 8080;
     environment = {
-      OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
+      OLLAMA_BASE_URL = "http://127.0.0.1:11434";
     };
   };
 
