@@ -1,88 +1,50 @@
-/*
-  ╔═══════════════════════════════════════════════════════╗
-  ║                                                       ║
-  ║        ███████╗██╗       █████╗ ██╗  ██╗███████╗      ║
-  ║        ██╔════╝██║      ██╔══██╗██║ ██╔╝██╔════╝      ║
-  ║        █████╗  ██║      ███████║█████╔╝ █████╗        ║
-  ║        ██╔══╝  ██║      ██╔══██║██╔═██╗ ██╔══╝        ║
-  ║        ██║     ███████╗ ██║  ██║██║  ██╗███████╗      ║
-  ║        ╚═╝     ╚══════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝      ║
-  ║                                                       ║
-  ╚═══════════════════════════════════════════════════════╝
-*/
- 
+# flake.nix
 {
-  description = "Nixos config flake"; 
+  description = "Level 4 Dendritic NixOS Config";
 
   inputs = {
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  NIXOS OFFICIAL PACKAGES
-    # ═══════════════════════════════════════════════════════════════════════════
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  HOME MANAGER
-    # ═══════════════════════════════════════════════════════════════════════════
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+    };
+
+    import-tree = {
+      url = "github:denful/import-tree";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-   
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  SOPS-NIX
-    # ═══════════════════════════════════════════════════════════════════════════
-    sops-nix.url = "github:Mic92/sops-nix";
 
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  NIRI
-    # ═══════════════════════════════════════════════════════════════════════════
-    niri.url = "github:sodiboo/niri-flake";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  STYLIX
-    # ═══════════════════════════════════════════════════════════════════════════
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:danth/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
-  outputs = { self, nixpkgs, sops-nix, stylix, ... }@inputs: {
-    
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  SYSTEM CONFIGURATION
-    # ═══════════════════════════════════════════════════════════════════════════
-    nixosConfigurations = {
+  outputs = inputs@{ flake-parts, import-tree, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        # Auto-load system and environment modules safely
+        (import-tree ./modules/environments)
 
-      "kerr" = nixpkgs.lib.nixosSystem {
-    	system = "x86_64-linux";
-    	specialArgs = { inherit inputs; currentTheme = "eldritch";};
-   	modules = [
-      	  ./hosts/kerr/default.nix
-      	  inputs.home-manager.nixosModules.home-manager
-      	  inputs.sops-nix.nixosModules.sops
-      	  inputs.niri.nixosModules.niri
-	  inputs.stylix.nixosModules.stylix
-    	];
-     };
-
-     "vm" = nixpkgs.lib.nixosSystem {
-       system = "x86_64-linux";
-       specialArgs = { inherit inputs; currentTheme = "rose-pine";};
-       modules = [
-        ./hosts/vm/default.nix
-        inputs.home-manager.nixosModules.home-manager
-        inputs.sops-nix.nixosModules.sops
+        # Explicitly import your host entry points
+        ./hosts/raven/raven.nix
+        ./hosts/kerr/kerr.nix
+        ./hosts/comet/comet.nix
+        ./hosts/gamma/gamma.nix
       ];
-    };  
-   };
-
-    # ═══════════════════════════════════════════════════════════════════════════
-    #  UTILITIES
-    # ═══════════════════════════════════════════════════════════════════════════
-    # Run `nix fmt` to auto-format your .nix files
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-  };
+    };
 }
-
