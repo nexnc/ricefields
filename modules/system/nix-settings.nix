@@ -36,5 +36,10 @@
     };
   };
 
+  system.autoUpgrade = {
+    enable = false;
+    allowReboot = false;
+  };
+
   nixpkgs.config.allowUnfree = true;
 }
