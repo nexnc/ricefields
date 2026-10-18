@@ -1,10 +1,17 @@
 { config, pkgs, inputs, ... }:
+
+let
+  username = config.user.name;
+  userHomeModule = if config.profile.desktop 
+                   then import ../../modules/home/home.nix 
+                   else import ../../modules/home/home-core.nix;
+in
 {
   users.mutableUsers = false;
 
-  users.users.nexnc = {
+  users.users.${username} = {
     isNormalUser = true;
-    description = "NEXNC";
+    description = config.user.fullName;
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -20,19 +27,14 @@
 
   users.users.root.hashedPasswordFile = config.sops.secrets.root_password.path;
 
-  users.users.greeter = {
-    isSystemUser = true;
-    shell = pkgs.fish;
-  };
-
   home-manager = {
     extraSpecialArgs = { 
       inherit inputs;
       systemHostname = config.networking.hostName;
     };
     backupFileExtension = "backup";
-    users."nexnc" = import ../../modules/home/home.nix;
+    users.${username} = userHomeModule;
   };
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "26.05";
 }
