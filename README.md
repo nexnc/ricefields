@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![NixOS](https://img.shields.io/badge/NixOS-25.11-5277C3.svg?style=for-the-badge&logo=nixos&logoColor=white)
+![NixOS](https://img.shields.io/badge/NixOS-26.05-5277C3.svg?style=for-the-badge&logo=nixos&logoColor=white)
 ![Flakes](https://img.shields.io/badge/Nix-Flakes-7EB5D6.svg?style=for-the-badge&logo=nixos&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 ![Security](https://img.shields.io/badge/Security-Hardened-red.svg?style=for-the-badge)
@@ -17,35 +17,48 @@
 
 ## Architecture
 
-Ricefields uses a modular flake structure that cleanly separates system-level NixOS configuration from user-space Home Manager modules, ensuring reproducible and atomic state across hardware targets.
+Ricefields uses a modular flake structure that cleanly separates system-level NixOS configuration from user-space Home Manager modules. Every host is assembled by a single builder (`modules/mkHost.nix`), so adding a machine means adding a small host file rather than copying a whole configuration.
 
 ```
 .
-├── devShells
-│   ├── blank
-│   │   └── flake.nix
-│   ├── cpp
-│   │   └── flake.nix
-│   ├── flake.nix
-│   ├── python
-│   │   └── flake.nix
-│   └── rust
-│       └── flake.nix
 ├── flake.lock
 ├── flake.nix                        # Flake entry point, defines hosts
-├── hosts
-│   ├── kerr                         # Workstation (AMD GPU, Zen kernel)
-│   │   ├── containers               # Podman services (workstation only)
-│   │   │   ├── cloudflared.nix
-│   │   │   ├── default.nix
-│   │   │   └── portainer.nix
-│   │   ├── default.nix              # Host entry point, imports modules
+├── hosts                            # One directory per machine
+│   ├── comet
+│   │   ├── comet.nix
+│   │   └── hardware-configuration.nix
+│   ├── gamma
+│   │   ├── gamma.nix
+│   │   └── hardware-configuration.nix
+│   ├── kerr
 │   │   ├── hardware-configuration.nix
-│   │   └── hardware.nix             # AMD GPU, disk mounts, hardware specifics
-│   └── vm
-│       └── default.nix
+│   │   └── kerr.nix
+│   └── raven                        # Workstation (AMD GPU, containers, local AI)
+│       ├── containers               # Podman services (Cloudflared, Portainer)
+│       │   ├── cloudflared.nix
+│       │   ├── default.nix
+│       │   └── portainer.nix
+│       ├── hardware-configuration.nix
+│       ├── hardware.nix             # AMD GPU, disk mounts, hardware specifics
+│       ├── LocalAI                  # Ollama + Open WebUI
+│       │   ├── default.nix
+│       │   └── ollama.nix
+│       └── raven.nix                # Host entry point
 ├── LICENSE
 ├── modules
+│   ├── desktop                      # NixOS-level desktop stack
+│   │   ├── default.nix
+│   │   ├── fonts.nix
+│   │   ├── niri.nix
+│   │   ├── packages.nix
+│   │   ├── security.nix
+│   │   ├── services.nix
+│   │   ├── steam.nix
+│   │   └── stylix.nix
+│   ├── environments                 # Development toolchains
+│   │   ├── cpp.nix
+│   │   ├── python.nix
+│   │   └── rust.nix
 │   ├── home                         # Home Manager (user-level)
 │   │   ├── desktop                  # Niri, Waybar, Hyprlock, SwayNC, etc.
 │   │   │   ├── default.nix
@@ -58,6 +71,8 @@ Ricefields uses a modular flake structure that cleanly separates system-level Ni
 │   │   │   ├── waybar.nix
 │   │   │   ├── wlogout.nix
 │   │   │   └── wofi.nix
+│   │   ├── home-cli.nix
+│   │   ├── home-core.nix
 │   │   ├── home.nix                 # HM entry point
 │   │   ├── programs                 # CLI & GUI applications
 │   │   │   ├── default.nix
@@ -73,6 +88,7 @@ Ricefields uses a modular flake structure that cleanly separates system-level Ni
 │   │   │   ├── mpv.nix
 │   │   │   ├── neovim.nix
 │   │   │   ├── rmpc.nix
+│   │   │   ├── sequoia.nix
 │   │   │   ├── ssh.nix
 │   │   │   ├── starship.nix
 │   │   │   ├── yazi.nix
@@ -85,16 +101,16 @@ Ricefields uses a modular flake structure that cleanly separates system-level Ni
 │   │       ├── default.nix
 │   │       ├── gnome-keyring.nix
 │   │       └── mpd.nix
-│   └── system                       # NixOS system-level (shared by all hosts)
-│       ├── boot.nix                 # Zen kernel, systemd-boot, v4l2loopback
+│   ├── mkHost.nix                   # Host builder used by flake.nix
+│   └── system                       # NixOS system-level (shared by hosts)
+│       ├── boot.nix                 # Bootloader, kernel, ZRAM
 │       ├── default.nix              # Imports all system modules
-│       ├── desktop.nix              # Greetd, portals, fonts, keyring
-│       ├── hardware-utils.nix       # Pipewire, Bluetooth, Zram
+│       ├── fish.nix
+│       ├── hardware-utils.nix       # PipeWire audio
 │       ├── networking.nix           # Firewall, NetworkManager, ports
 │       ├── nix-settings.nix         # GC, substituters, experimental features
+│       ├── profile.nix
 │       ├── sops.nix                 # Sops-nix secret paths and config
-│       ├── steam.nix
-│       ├── stylix.nix
 │       ├── users.nix                # User accounts, passwords, Home Manager
 │       └── virtualization.nix       # Podman, Libvirt, Virt-manager
 ├── README.md
@@ -108,6 +124,19 @@ Ricefields uses a modular flake structure that cleanly separates system-level Ni
 └── wallpapers
     └── nix.jpg
 ```
+
+---
+
+## Hosts
+
+| Host    | Entry point                | Notes                                              |
+|---------|----------------------------|----------------------------------------------------|
+| `raven` | `hosts/raven/raven.nix`    | Workstation: AMD GPU, Podman services, local AI    |
+| `kerr`  | `hosts/kerr/kerr.nix`      |                                                    |
+| `comet` | `hosts/comet/comet.nix`    |                                                    |
+| `gamma` | `hosts/gamma/gamma.nix`    |                                                    |
+
+Each host directory holds its own generated `hardware-configuration.nix`; everything shared lives in `modules/`.
 
 ---
 
@@ -153,11 +182,13 @@ Age passphrase (230-bit entropy)
 
 **Single source of truth** — the git repository is the complete and authoritative description of the system. Manual changes are discarded on rebuild.
 
+**One builder, many hosts** — `modules/mkHost.nix` assembles every machine from the same shared modules, so a new host is a small file plus its hardware config.
+
 **Cryptographic secret management** via SOPS-nix and Age. Secrets are decrypted only at system activation time and never written to the Nix store in plaintext.
 
 **Atomic immutability** enforced by `users.mutableUsers = false`. All user accounts and password hashes are declared within the Nix configuration and cannot drift.
 
-**Performance tuning** via the Zen kernel with AMD-specific optimizations (RADV, ROCm) and ZRAM enabled.
+**Performance tuning** — kernel and AMD GPU tweaks (RADV, Vulkan) with ZRAM swap.
 
 **GPG as SSH root of trust** — a single GPG keyring manages both commit signing and SSH authentication. Restoring the GPG master key is sufficient to recover all SSH identities.
 
@@ -171,10 +202,10 @@ Fish abbreviations — all paths and hostnames are resolved dynamically from `ne
 |-----------------|---------------------------------------------------------|
 | `systemupdate`  | `sudo nixos-rebuild switch --flake <flake>#<host>`     |
 | `flakeupdate`   | `sudo nix flake update --flake <flake>`                |
-| `nixconfig`     | `sudo nvim <flake>/hosts/<host>/default.nix`           |
-| `homeconfig`    | `sudo nvim <flake>/modules/home/home.nix`              |
-| `fishconfig`    | `sudo nvim <flake>/modules/home/programs/fish.nix`     |
-| `niriconfig`    | `sudo nvim <flake>/modules/home/desktop/niri.nix`      |
+| `nixconfig`     | `nvim <flake>/hosts/<host>/<host>.nix`                 |
+| `homeconfig`    | `nvim <flake>/modules/home/home.nix`                   |
+| `fishconfig`    | `nvim <flake>/modules/home/programs/fish.nix`          |
+| `niriconfig`    | `nvim <flake>/modules/home/desktop/niri.nix`           |
 
 Modern CLI replacements:
 
@@ -193,6 +224,8 @@ Modern CLI replacements:
 ---
 
 ## Fresh Installation
+
+Replace `<host>` with one of `raven`, `kerr`, `comet` or `gamma`.
 
 ### Prerequisites
 
@@ -213,7 +246,7 @@ mkfs.fat -F 32 -n boot /dev/sda1
 mkfs.ext4 -L nixos /dev/sda2
 ```
 
-### Step 2 — Mount and install
+### Step 2 — Mount and generate the hardware config
 
 ```bash
 mount /dev/disk/by-label/nixos /mnt
@@ -223,7 +256,24 @@ mount /dev/disk/by-label/boot /mnt/boot
 nixos-generate-config --root /mnt
 ```
 
-### Step 3 — Place Age key
+### Step 3 — Clone the repository
+
+`nixos-generate-config` creates `/mnt/etc/nixos`, so keep its hardware file, clear the directory, then clone into it:
+
+```bash
+nix-shell -p git age
+
+cp /mnt/etc/nixos/hardware-configuration.nix /tmp/
+rm -rf /mnt/etc/nixos
+
+git clone https://github.com/nexnc/ricefields.git /mnt/etc/nixos
+cd /mnt/etc/nixos
+
+cp /tmp/hardware-configuration.nix hosts/<host>/hardware-configuration.nix
+git add hosts/<host>/hardware-configuration.nix   # flakes only see tracked files
+```
+
+### Step 4 — Place the Age key
 
 ```bash
 mkdir -p /mnt/var/lib/sops-nix
@@ -232,16 +282,11 @@ age --decrypt secrets/key.age > /mnt/var/lib/sops-nix/key.txt
 chmod 600 /mnt/var/lib/sops-nix/key.txt
 ```
 
-### Step 4 — Clone and build
+### Step 5 — Install
 
 ```bash
-git clone https://github.com/nexnc/ricefields.git /mnt/etc/nixos
-cd /mnt/etc/nixos
-
-# Copy generated hardware config
-cp /mnt/etc/nixos/hardware-configuration.nix hosts/kerr/hardware-configuration.nix
-
-nixos-install --flake .#kerr
+# Passwords come from sops, so skip the interactive root password prompt
+nixos-install --no-root-passwd --flake .#<host>
 reboot
 ```
 
@@ -249,11 +294,12 @@ reboot
 
 ## Adding a New Host
 
-1. Create `hosts/<hostname>/default.nix` importing `../../modules/system` and host-specific hardware
-2. Create `hosts/<hostname>/hardware.nix` with hardware-specific config
-3. Copy `hardware-configuration.nix` from `nixos-generate-config`
-4. Add the host to `flake.nix` under `nixosConfigurations`
-5. Build: `sudo nixos-rebuild switch --flake /etc/nixos#<hostname>`
+1. Create `hosts/<hostname>/<hostname>.nix` as the host entry point
+2. Copy `hardware-configuration.nix` from `nixos-generate-config` into the same directory
+3. Add a `hardware.nix` next to it if the machine needs hardware-specific config
+4. Register the host in `flake.nix` through `modules/mkHost.nix`
+5. Track the new files (`git add hosts/<hostname>`), then build:
+   `sudo nixos-rebuild switch --flake /etc/nixos#<hostname>`
 
 ---
 
@@ -278,7 +324,11 @@ gpg> save
 ```
 
 ---
+**Note:** This README is AI-Generated (I get lazy when writing documentation)
+---
 
 <div align="center">
-Author: NEXNC &nbsp;·&nbsp; Host: kerr.nexnc.com &nbsp;·&nbsp; Target: NixOS 25.11 (Xantusia) &nbsp;·&nbsp; License: MIT
+Author: NEXNC &nbsp;·&nbsp; Hosts: raven · kerr · comet · gamma &nbsp;·&nbsp; Target: NixOS 26.05 &nbsp;·&nbsp; License: MIT
 </div>
+
+
