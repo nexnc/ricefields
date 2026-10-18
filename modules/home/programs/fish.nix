@@ -7,6 +7,21 @@ in
   programs.fish = {
     enable = true;
 
+    functions = {
+      nix-init = ''
+        set -l env_type $argv[1]
+        if test -z "$env_type"
+            echo "Usage: nix-init [rust|cpp|python]"
+            return 1
+        end
+
+        echo "use flake path:/etc/nixos#$env_type" > .envrc
+        direnv allow
+        echo "Initialized $env_type environment using /etc/nixos."
+      '';
+    };
+
+
     shellInit = ''
       set -g fish_greeting ""
       set -gx PATH $HOME/.cargo/bin $PATH
