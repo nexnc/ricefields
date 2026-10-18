@@ -1,13 +1,16 @@
-{ imports = [
+# modules/system/default.nix
+{ ... }:
+
+{
+  imports = [
     ./boot.nix
-    ./nix-settings.nix
-    ./networking.nix
     ./hardware-utils.nix
-    ./desktop.nix
-    ./virtualization.nix
+    ./networking.nix
+    ./nix-settings.nix
+    ./profile.nix
     ./sops.nix
     ./users.nix
-    ./stylix.nix
-    ./steam.nix
+    ./virtualization.nix
+    ./fish.nix
   ];
 }
