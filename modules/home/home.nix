@@ -1,167 +1,169 @@
-/*
-  ╔═══════════════════════════════════════════════════════╗
-  ║                                                       ║
-  ║        ██╗  ██╗ ██████╗ ███╗   ███╗███████╗           ║
-  ║        ██║  ██║██╔═══██╗████╗ ████║██╔════╝           ║
-  ║        ███████║██║   ██║██╔████╔██║█████╗             ║
-  ║        ██╔══██║██║   ██║██║╚██╔╝██║██╔══╝             ║
-  ║        ██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗           ║
-  ║        ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝           ║
-  ║                                                       ║
-  ╚═══════════════════════════════════════════════════════╝
-*/
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █ █ ███  ██ ██ █ █ ███  ██ █ █ █  █  █ █ █ █ ██ ██ █ █ ██  █ ██ ██ ██  ███   █ █
+# █ █                                    █ █                                     █ █
+# █ █                                    █ █                                     █ █
+#        6     4    0     5     0    9        0    4    0    1     4       7
+# ──────────────────────────────────────────────────────────────────────────────────
+# HOME  //  nexnc  //  home-manager 26.05
+# nexnc.com  ·  user environment: defaults, packages, session
 
 { config, pkgs, lib, ... }:
 
+let
+  # ▌DEFAULTS
+  fileManager = "thunar.desktop"; # installed system-wide via programs.thunar
+  browser = "librewolf.desktop";
+in
 {
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  CORE CONFIGURATION
-  # ═══════════════════════════════════════════════════════════════════════════
-  home.username      = "nexnc";
+  # ▌CORE
+  home.username = "nexnc";
   home.homeDirectory = "/home/nexnc";
-  home.stateVersion  = "26.05";
+  home.stateVersion = "26.05";
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  MODULE IMPORTS
-  # ═══════════════════════════════════════════════════════════════════════════
+  # ▌IMPORTS
   imports = [
-    # Desktop Environment
     ./desktop
-
-    # User Programs
     ./programs
- 
-    # User Services
     ./services
-
-    # Scripts
     ./scripts
   ];
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  ALLOW UNFREE PACKAGES
-  # ═══════════════════════════════════════════════════════════════════════════
-    nixpkgs.config.allowUnfreePredicate = pkg:
-      builtins.elem (pkgs.lib.getName pkg) [
-	"steam-unwrapped"
-	"steam"
-	"steam-original"
-	"steam-run"
-      ];
+  # ▌DEFAULT APPS
+  xdg.mimeApps = {
+    enable = true;
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  USER PACKAGES
-  # ═══════════════════════════════════════════════════════════════════════════
-  home.packages = with pkgs; [
-    # ─── Browsers & Communication ──────────────────────────────────────────────
-    librewolf
-    thunderbird
+    # explicit picks
+    defaultApplications = {
+      "inode/directory" = fileManager;
+      "text/html" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/unknown" = browser;
+    };
 
-    # ─── Media & Entertainment ─────────────────────────────────────────────────
-
-    # ─── Productivity & Creation ───────────────────────────────────────────────
-    obs-studio
-    gimp
-
-
-    # ─── Gaming ────────────────────────────────────────────────────────────────
-    prismlauncher
-    gamescope
-    protontricks
-    wine-wayland
-    lutris
-
-    # ─── Development ───────────────────────────────────────────────────────────
-    python3
-    rustup
-    gcc
-    uv
-    pixi
-
-    # ─── Desktop Utilities ─────────────────────────────────────────────────────
-    fastfetch
-    ffmpeg
-    yt-dlp
-    aria2
-    p7zip
-    exiftool
-    nsxiv
-    qbittorrent
-    valent
-    filen-desktop
-    filen-cli
-    wireguard-tools
-    glow 	    # Markdown Reader in Terminal
-    figlet
-    lolcat
-    whois
-    universal-android-debloater
-    android-tools
-    pavucontrol
-    bluetui
-    usbutils
-    pciutils
-    ncdu
-
-    # ─── Terminal Tools ────────────────────────────────────────────────────────
-    wl-clipboard
-    cliphist
-    eza             # Better ls
-    ripgrep         # Better grep
-    fd              # Better find
-    bat             # Better cat
-    dust            # Disk usage
-    duf             # Disk usage (TUI)
-    gdu             # Disk usage analyzer
-    tldr            # Simplified man pages
-    delta           # Better git diff
-    tokei           # Count lines of code
-    btop            # Process manager
-    bandwhich       # Network monitor
-    just            # Command runner
-    hyperfine       # Benchmarking
-    pastebinit      # Copying text to dpaste.com
-
-    # ----- Security -----------------------------------------------------------
-    gpg-tui
-    gcr
-
-  ];
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  ENVIRONMENT VARIABLES
-  # ═══════════════════════════════════════════════════════════════════════════
-  home.sessionVariables = {
-    # Core defaults
-    EDITOR   = "nvim";
-    VISUAL   = "nvim";
-    SUDO_EDITOR = "nvim";
-    TERMINAL = "foot";
-    BROWSER  = "librewolf";
-
-    # XDG Directories
-    XDG_CACHE_HOME  = "${config.home.homeDirectory}/.cache";
-    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
-    XDG_DATA_HOME   = "${config.home.homeDirectory}/.local/share";
-
-    # Wayland Compatibility
-    MOZ_ENABLE_WAYLAND  = "1";
-    XDG_CURRENT_DESKTOP = "niri:GNOME";
-    XDG_SESSION_TYPE    = "wayland";
-
-    # Keyring
-    PYTHON_KEYRING_BACKEND = "keyring.backends.libsecret.Keyring";
-
-    # Game Driver Fixes
-    # Forces correct 32-bit/64-bit drivers and enables background shader compilation
-    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/radeon_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/radeon_icd.i686.json";
-    DXVK_ASYNC = "1";
-    RADV_PERFTEST = "gpl"; # Performance fix for movement jitters
+    # everything these apps can open becomes theirs (order = priority)
+    defaultApplicationPackages = with pkgs; [
+      mpv # video + music
+      gthumb # images
+      gnome-text-editor # text files
+    ];
   };
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  #  HOME MANAGER SETUP
-  # ═══════════════════════════════════════════════════════════════════════════
+  # ▌UNFREE
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "steam"
+      "steam-original"
+      "steam-run"
+      "steam-unwrapped"
+    ];
+
+  # ▌PACKAGES
+  home.packages = with pkgs; [
+    # ── browsers & communication
+    librewolf                    # privacy-hardened Firefox fork
+    thunderbird                  # email, calendar & RSS client
+
+    # ── productivity & creation
+    obs-studio                   # screen recording & live streaming
+    gimp                         # full-featured raster image editor
+
+    # ── gaming
+    prismlauncher                # Minecraft launcher with multiple instances
+    gamescope                    # Valve's game compositor: scaling, FSR, frame limits
+    protontricks                 # winetricks for Proton / Steam games
+    wine-wayland                 # Wine with native Wayland support
+    lutris                       # game launcher for Wine, emulators & native games
+
+    # ── development
+    python3                      # Python interpreter
+    rustup                       # Rust toolchain manager
+    gcc                          # GNU C/C++ compiler
+    uv                           # extremely fast Python package & project manager
+    pixi                         # project-based, conda-compatible package manager
+
+    # ── desktop utilities
+    gnome-text-editor            # simple, fast GUI text editor
+    fastfetch                    # fast system info display
+    ffmpeg                       # audio/video converter & swiss-army knife
+    yt-dlp                       # download video/audio from YouTube & 1000+ sites
+    aria2                        # multi-connection download utility
+    p7zip                        # 7z archiver
+    exiftool                     # read/write image & file metadata
+    gthumb                       # image viewer & browser with basic editing (crop, rotate, resize, colors)
+    qbittorrent                  # BitTorrent client
+    valent                       # KDE Connect-compatible phone sync for GNOME
+    filen-desktop                # Filen end-to-end encrypted cloud sync
+    filen-cli                    # Filen cloud storage from the terminal
+    wireguard-tools              # WireGuard VPN CLI (wg, wg-quick)
+    glow                         # render Markdown in the terminal
+    figlet                       # big ASCII-art text banners
+    lolcat                       # rainbow-colored terminal output
+    whois                        # domain / IP registration lookup
+    universal-android-debloater  # remove bloatware from Android phones
+    android-tools                # adb & fastboot
+    pavucontrol                  # PipeWire / PulseAudio volume control GUI
+    bluetui                      # terminal UI for Bluetooth
+    usbutils                     # lsusb: list USB devices
+    pciutils                     # lspci: list PCI devices
+    ncdu                         # interactive disk usage browser
+    rclone                       # syncing client
+
+    # ── terminal tools
+    wl-clipboard                 # wl-copy / wl-paste for the Wayland clipboard
+    cliphist                     # clipboard history for Wayland
+    eza                          # modern ls
+    ripgrep                      # fast recursive grep
+    fd                           # fast, friendly find
+    bat                          # cat with syntax highlighting
+    dust                         # du, but visual and intuitive
+    duf                          # df, but readable: disks at a glance
+    gdu                          # fast disk usage analyzer (TUI)
+    tldr                         # simplified, example-based man pages
+    delta                        # syntax-highlighting pager for git diffs
+    tokei                        # count lines of code per language
+    btop                         # resource monitor: CPU, RAM, disks, network
+    bandwhich                    # network bandwidth usage per process
+    just                         # command runner (make, for tasks)
+    hyperfine                    # command-line benchmarking
+    pastebinit                   # paste text to dpaste.com from the terminal
+
+    # ── security
+    gpg-tui                      # terminal UI for GPG keys
+    gcr                          # GNOME keyring prompts & certificate viewers
+  ];
+
+  # ▌ENVIRONMENT
+  # exports XDG_{CACHE,CONFIG,DATA,STATE}_HOME at the default paths
+  xdg.enable = true;
+
+  home.sessionVariables = {
+    # defaults
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    SUDO_EDITOR = "nvim";
+    TERMINAL = "foot";
+    BROWSER = "librewolf";
+
+    # wayland
+    MOZ_ENABLE_WAYLAND = "1";
+    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_SESSION_TYPE = "wayland";
+
+    # keyring
+    PYTHON_KEYRING_BACKEND = "keyring.backends.libsecret.Keyring";
+
+    # game driver fixes: correct 32/64-bit vulkan drivers + background shader compilation
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/radeon_icd.x86_64.json:/run/opengl-driver-32/share/vulkan/icd.d/radeon_icd.i686.json";
+    DXVK_ASYNC = "1";
+    RADV_PERFTEST = "gpl"; # fixes movement jitters
+  };
+
+  # ▌HOME-MANAGER
   programs.home-manager.enable = true;
 }
-
