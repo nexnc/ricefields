@@ -12,7 +12,7 @@
     };
   };
 
-  services.dbus.packages = [ pkgs.nautilus ];
+  services.dbus.packages = [ pkgs.thunar ];
 
   xdg.portal = {
     enable = true;
@@ -68,7 +68,7 @@
   environment.systemPackages = with pkgs; [
     wget
     curl
-    nautilus
+    thunar
     gparted
     udiskie
     polkit_gnome
@@ -80,9 +80,7 @@
     libsecret
     sops
     age
-    gamemode
     amdgpu_top
-    mangohud
     xwayland-satellite
     slurp                     # Required by xdg-desktop-portal-wlr for region selection
   ];
