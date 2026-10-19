@@ -41,8 +41,8 @@ in
 
     defaultApplicationPackages = with pkgs; [
       mpv
-      gthumb
-      gnome-text-editor
+      loupe
+      
     ];
   };
 
