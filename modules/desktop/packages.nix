@@ -10,7 +10,7 @@ lib.mkIf config.profile.desktop {
   environment.systemPackages = with pkgs; [
     wget
     curl
-    thunar
+    nemo
     gparted
     udiskie
     polkit_gnome
