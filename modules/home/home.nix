@@ -17,6 +17,7 @@ let
   # ▌DEFAULTS
   fileManager = "nemo.desktop";
   browser = "librewolf.desktop";
+  pdfViewer = "org.kde.okular.desktop";
 in
 {
   # ▌IMPORTS
@@ -37,12 +38,14 @@ in
       "x-scheme-handler/https" = browser;
       "x-scheme-handler/about" = browser;
       "x-scheme-handler/unknown" = browser;
+      "application/pdf" = pdfViewer;
     };
 
     defaultApplicationPackages = with pkgs; [
       mpv
       loupe
-      
+      kdePackages.kate
+      kdePackages.okular
     ];
   };
 
@@ -75,6 +78,7 @@ in
     # ── desktop utilities
     loupe
     kdePackages.kate
+    kdePackages.okular
     qbittorrent
     valent
     filen-desktop
