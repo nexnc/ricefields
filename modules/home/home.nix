@@ -73,8 +73,8 @@ in
     lutris
 
     # ── desktop utilities
-    gnome-text-editor
-    gthumb
+    loupe
+    kdePackages.kate
     qbittorrent
     valent
     filen-desktop
