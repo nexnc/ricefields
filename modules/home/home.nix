@@ -15,7 +15,7 @@
 
 let
   # ▌DEFAULTS
-  fileManager = "thunar.desktop";
+  fileManager = "nemo.desktop";
   browser = "librewolf.desktop";
 in
 {
