@@ -38,6 +38,13 @@ lib.mkIf config.profile.desktop {
       size = 24;
     };
 
+    icons = {
+      enable = true;
+      package = pkgs.papirus-icon-theme;
+      dark = "Papirus-Dark";
+      light = "Papirus";
+    };
+
     fonts = {
       monospace = { package = pkgs.nerd-fonts.jetbrains-mono; name = "JetBrainsMono Nerd Font"; };
       sansSerif = { package = pkgs.dejavu_fonts; name = "DejaVu Sans"; };
