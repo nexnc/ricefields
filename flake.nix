@@ -32,6 +32,11 @@
       url = "github:danth/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ flake-parts, import-tree, ... }:
@@ -40,7 +45,7 @@
         # Auto-load system and environment modules safely
         (import-tree ./modules/environments)
 
-        # Explicitly import your host entry points
+        # Import host entry points
         ./hosts/raven/raven.nix
         ./hosts/kerr/kerr.nix
         ./hosts/comet/comet.nix
