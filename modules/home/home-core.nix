@@ -11,7 +11,7 @@
 # HOME CORE  //  dynamic user  //  home-manager 26.05
 # user environment: cli tools, programs, services, scripts
 
-{ config, pkgs, lib, osConfig, ... }:
+{ config, pkgs, lib, osConfig, inputs, ... }:
 
 let
   # ▌DEFAULTS
@@ -25,6 +25,7 @@ in
 
   # ▌IMPORTS
   imports = [
+    inputs.nixvim.homeModules.nixvim
     ./programs
     ./services
     ./scripts
