@@ -3,7 +3,6 @@
     ./git.nix
     ./fish.nix
     ./zoxide.nix
-    ./neovim.nix
     ./fzf.nix
     ./yazi.nix
     ./lazygit.nix
@@ -13,7 +12,7 @@
     ./rmpc.nix
     ./gitui.nix
     ./direnv.nix
-    # ./gpg.nix
+    ./nixvim.nix
     ./zellij.nix
     ./jujutsu.nix
     ./mpv.nix
