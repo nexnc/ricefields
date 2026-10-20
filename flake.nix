@@ -41,6 +41,7 @@
 
   outputs = inputs@{ flake-parts, import-tree, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
       imports = [
         # Auto-load system and environment modules safely
         (import-tree ./modules/environments)
