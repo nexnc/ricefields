@@ -1,7 +1,11 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }: 
+
+
+{
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
+    nixpkgs.source = pkgs.path;
 
     opts = {
       clipboard = "unnamedplus";
@@ -30,9 +34,9 @@
       nvim-tree.enable = true;
       which-key.enable = true;
       gitsigns.enable = true;
-      autopairs.enable = true;
+      nvim-autopairs.enable = true;
       comment.enable = true;
-      surround.enable = true;
+      vim-surround.enable = true;
       telescope.enable = true;
       
       treesitter = {
@@ -47,7 +51,11 @@
         enable = true;
         servers = {
           pyright.enable = true;
-          rust_analyzer.enable = true;
+          rust_analyzer = {
+            enable = true;
+            installCargo = true;
+            installRustc = true;
+          };
           nil_ls.enable = true;
         };
       };
