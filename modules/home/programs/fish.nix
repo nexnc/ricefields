@@ -15,9 +15,37 @@ in
             return 1
         end
 
-        echo "use flake path:/etc/nixos#$env_type" > .envrc
+        if test -e flake.nix
+            echo "flake.nix already exists, aborting" >&2
+            return 1
+        end
+
+        # build the generated flake text from the central definition
+        set -l out (nix build "path:${flakePath}#$env_type-flake" --no-link --print-out-paths)
+        or begin
+            echo "No '$env_type-flake' package found in ${flakePath}" >&2
+            return 1
+        end
+
+        # store files are read-only, so copy with normal permissions
+        install -m 644 $out flake.nix
+
+        # in a git repo, flakes only see tracked files
+        if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+            git add -N flake.nix
+        end
+
+        nix flake lock
+
+        echo "use flake" > .envrc
         direnv allow
-        echo "Initialized $env_type environment using /etc/nixos."
+
+        # keep local direnv files out of git
+        for p in .direnv/ .envrc
+            grep -qxF $p .gitignore 2>/dev/null; or echo $p >> .gitignore
+        end
+
+        echo "Initialized $env_type environment (flake.nix, flake.lock, .envrc)."
       '';
     };
 
