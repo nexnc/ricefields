@@ -89,7 +89,7 @@ in
   home.sessionVariables = {
     BROWSER = "librewolf";
     MOZ_ENABLE_WAYLAND = "1";
-    XDG_CURRENT_DESKTOP = "niri:GNOME";
+    XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
 
     PYTHON_KEYRING_BACKEND = "keyring.backends.libsecret.Keyring";
