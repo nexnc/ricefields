@@ -24,7 +24,7 @@
     profile = {
       timeZone = lib.mkOption {
         type = lib.types.str;
-        default = "Europe/Berlin";
+        default = "Asia/Kolkata";
         description = "System timezone";
       };
       locale = lib.mkOption {
